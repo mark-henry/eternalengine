@@ -1,0 +1,10 @@
+C:\Documents and Settings\Mark\My Documents\C# Programs\Animator\Animator\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Mark\My Documents\C# Programs\Animator\Animator\obj\Debug\Aeternal.csproj.GenerateResource.Cache
+C:\Documents and Settings\Mark\My Documents\C# Programs\Animator\Animator\bin\Debug\Aeternal.exe
+C:\Documents and Settings\Mark\My Documents\C# Programs\Animator\Animator\bin\Debug\Aeternal.pdb
+C:\Documents and Settings\Mark\My Documents\C# Programs\Animator\Animator\obj\Debug\Aeternal.Form1.resources
+C:\Documents and Settings\Mark\My Documents\C# Programs\Animator\Animator\obj\Debug\Aeternal.Properties.Resources.resources
+C:\Documents and Settings\Mark\My Documents\C# Programs\Animator\Animator\obj\Debug\Aeternal.exe
+C:\Documents and Settings\Mark\My Documents\C# Programs\Animator\Animator\obj\Debug\Aeternal.pdb
+C:\Documents and Settings\Mark\My Documents\C# Programs\Animator\Animator\bin\Debug\EternalEngine.dll
+C:\Documents and Settings\Mark\My Documents\C# Programs\Animator\Animator\bin\Debug\EternalEngine.pdb
