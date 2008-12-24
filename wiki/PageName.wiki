@@ -1,5 +1,0 @@
-#summary About the Project
-
-= The Eternal Engine =
-
-Welcome to Mark Henry's Eternal Engine project on Google Code. This is my senior project for Windsor High School, 2009. This project is a game engine; the project outline can be found at the Outline page.
