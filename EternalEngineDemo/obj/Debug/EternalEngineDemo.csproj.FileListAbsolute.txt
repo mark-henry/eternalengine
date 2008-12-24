@@ -1,0 +1,10 @@
+C:\Documents and Settings\Mark\My Documents\C# Programs\EternalEngineDemo\EternalEngineDemo\bin\Debug\EternalEngineDemo.exe
+C:\Documents and Settings\Mark\My Documents\C# Programs\EternalEngineDemo\EternalEngineDemo\bin\Debug\EternalEngineDemo.pdb
+C:\Documents and Settings\Mark\My Documents\C# Programs\EternalEngineDemo\EternalEngineDemo\bin\Debug\EternalEngine.dll
+C:\Documents and Settings\Mark\My Documents\C# Programs\EternalEngineDemo\EternalEngineDemo\bin\Debug\EternalEngine.pdb
+C:\Documents and Settings\Mark\My Documents\C# Programs\EternalEngineDemo\EternalEngineDemo\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Mark\My Documents\C# Programs\EternalEngineDemo\EternalEngineDemo\obj\Debug\EternalEngineDemo.Form1.resources
+C:\Documents and Settings\Mark\My Documents\C# Programs\EternalEngineDemo\EternalEngineDemo\obj\Debug\EternalEngineDemo.Properties.Resources.resources
+C:\Documents and Settings\Mark\My Documents\C# Programs\EternalEngineDemo\EternalEngineDemo\obj\Debug\EternalEngineDemo.csproj.GenerateResource.Cache
+C:\Documents and Settings\Mark\My Documents\C# Programs\EternalEngineDemo\EternalEngineDemo\obj\Debug\EternalEngineDemo.exe
+C:\Documents and Settings\Mark\My Documents\C# Programs\EternalEngineDemo\EternalEngineDemo\obj\Debug\EternalEngineDemo.pdb
