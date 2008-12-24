@@ -1,5 +1,0 @@
-C:\Documents and Settings\Mark\My Documents\C# Programs\MMHAnimation\MMHAnimation\obj\Release\ResolveAssemblyReference.cache
-C:\Documents and Settings\Mark\My Documents\C# Programs\MMHAnimation\MMHAnimation\bin\Release\EternalEngine.dll
-C:\Documents and Settings\Mark\My Documents\C# Programs\MMHAnimation\MMHAnimation\bin\Release\EternalEngine.pdb
-C:\Documents and Settings\Mark\My Documents\C# Programs\MMHAnimation\MMHAnimation\obj\Release\EternalEngine.dll
-C:\Documents and Settings\Mark\My Documents\C# Programs\MMHAnimation\MMHAnimation\obj\Release\EternalEngine.pdb

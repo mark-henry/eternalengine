@@ -1,5 +1,0 @@
-C:\Documents and Settings\Mark\My Documents\C# Programs\MMHAnimation\MMHAnimation\bin\Debug\MMHAnimation.dll
-C:\Documents and Settings\Mark\My Documents\C# Programs\MMHAnimation\MMHAnimation\bin\Debug\MMHAnimation.pdb
-C:\Documents and Settings\Mark\My Documents\C# Programs\MMHAnimation\MMHAnimation\obj\Debug\ResolveAssemblyReference.cache
-C:\Documents and Settings\Mark\My Documents\C# Programs\MMHAnimation\MMHAnimation\obj\Debug\MMHAnimation.dll
-C:\Documents and Settings\Mark\My Documents\C# Programs\MMHAnimation\MMHAnimation\obj\Debug\MMHAnimation.pdb
