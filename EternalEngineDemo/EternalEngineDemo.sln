@@ -1,12 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C# Express 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EternalEngine", "..\MMHAnimation\MMHAnimation\EternalEngine.csproj", "{5BD088C5-A03E-4227-A87B-B0EA9B088F60}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EternalEngine", "..\EternalEngine\EternalEngine.csproj", "{5BD088C5-A03E-4227-A87B-B0EA9B088F60}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EternalEngineDemo", "EternalEngineDemo\EternalEngineDemo.csproj", "{B7A47343-9514-499F-B674-12F7FBAE7AFA}"
-	ProjectSection(ProjectDependencies) = postProject
-		{5BD088C5-A03E-4227-A87B-B0EA9B088F60} = {5BD088C5-A03E-4227-A87B-B0EA9B088F60}
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EternalEngineDemo", "EternalEngineDemo.csproj", "{B7A47343-9514-499F-B674-12F7FBAE7AFA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
