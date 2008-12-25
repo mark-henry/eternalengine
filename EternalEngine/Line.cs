@@ -1,7 +1,9 @@
 ﻿using System.Drawing;
+using System;
 
 namespace EternalEngine
 {
+    [Serializable]
     public class Line
     {
         public Line(int VertexIndex1, int VertexIndex2, Color Color, float Width)

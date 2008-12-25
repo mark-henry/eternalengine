@@ -38,11 +38,11 @@ namespace EternalEngine
                 try {
                     percent = (((float)CurrentFrame - (float)PreviousFrame) / ((float)NextFrame - (float)PreviousFrame));
                     if (CurrentFrame == 0) { percent = 0; }
+                    if (CurrentFrame == NumberofFrames) { percent = 100; }
                 }
                 catch (DivideByZeroException)
                 {
                     Debug.WriteLine("Error: Division by 0 @ calculation of percent");
-                    if (CurrentFrame == NumberofFrames) { percent = 100; }
                 }
                 Debug.WriteLine("calculating! " + CurrentFrame.ToString() + " " + PreviousFrame.ToString() + " " + NextFrame + " percent:" + percent.ToString());
                 for (int i = 0; i < Keyframes[PreviousFrame].Vertices.Count; i++)

@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using System;
 
 namespace EternalEngine
 {
+    [Serializable]
     public class Keyframe
     {
         /// <summary>
