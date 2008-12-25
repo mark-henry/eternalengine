@@ -29,35 +29,21 @@ namespace EternalEngine
             file.Close();
         }
 
-        //public List<Vertex> Calculate()
-        //{
-        //    if (PreviousFrame != -1 && NextFrame != -1)
-        //    {
-        //        Vertex[] final = new Vertex[Keyframes[PreviousFrame].Vertices.Count];
-        //        Keyframes[PreviousFrame].Vertices.CopyTo(final);
-        //        float percent = 0;
-        //        try { percent = (((float)CurrentFrame - (float)PreviousFrame) / ((float)NextFrame - (float)PreviousFrame)); }
-        //        catch (DivideByZeroException e) { }
-        //        Debug.WriteLine("calculating! " + CurrentFrame.ToString() + " " + PreviousFrame.ToString() + " " + NextFrame + " percent:" + percent.ToString());
-        //        for (int i = 0; i < Keyframes[PreviousFrame].Vertices.Count; i++)
-        //        {
-        //            final[i].LocationX += (percent * (Keyframes[NextFrame].Vertices[i].Location.X - Keyframes[PreviousFrame].Vertices[i].Location.X));
-        //            final[i].LocationY += (percent * (Keyframes[NextFrame].Vertices[i].Location.Y - Keyframes[PreviousFrame].Vertices[i].Location.Y));
-        //        }
-        //        List<Vertex> ret = new List<Vertex>(final);
-        //        return ret;
-        //    }
-        //    else { return null; }
-        //}
-
         public void GoTo(List<Vertex> vertices, int frame)
         {
-            this.CurrentFrame = frame;
+            CurrentFrame = frame;
             if (PreviousFrame != -1 && NextFrame != -1)
             {
                 float percent = 0;
-                try { percent = (((float)CurrentFrame - (float)PreviousFrame) / ((float)NextFrame - (float)PreviousFrame)); }
-                catch (DivideByZeroException e) { Debug.WriteLine("Error: Division by 0 @ calculation of percent"); }
+                try {
+                    percent = (((float)CurrentFrame - (float)PreviousFrame) / ((float)NextFrame - (float)PreviousFrame));
+                    if (CurrentFrame == 0) { percent = 0; }
+                }
+                catch (DivideByZeroException)
+                {
+                    Debug.WriteLine("Error: Division by 0 @ calculation of percent");
+                    if (CurrentFrame == NumberofFrames) { percent = 100; }
+                }
                 Debug.WriteLine("calculating! " + CurrentFrame.ToString() + " " + PreviousFrame.ToString() + " " + NextFrame + " percent:" + percent.ToString());
                 for (int i = 0; i < Keyframes[PreviousFrame].Vertices.Count; i++)
                 {
@@ -66,7 +52,7 @@ namespace EternalEngine
                 }
             }
             else
-                Debug.WriteLine("Error: Previous & Next Frames == -1 @ GoTo()");
+                Debug.WriteLine("Error: Previous or Next Frames == -1 @ GoTo()");
         }
 
         public int CurrentFrame { get; set; }

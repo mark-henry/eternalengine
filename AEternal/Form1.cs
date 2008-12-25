@@ -24,6 +24,7 @@ namespace Aeternal
         int firstlink;
         int secondlink;
         bool success;
+        Keys keys = new Keys();
 
         public Form1()
         {
@@ -114,12 +115,15 @@ namespace Aeternal
             trackBar1.Value = 0;
         }
 
+        //Trackbar
         private void trackBar1_ValueChanged(object sender, EventArgs e)
         {
             label1.Text = "Frame " + trackBar1.Value.ToString() + "/" + trackBar1.Maximum.ToString();
-            currentfile.Animation.CurrentFrame = trackBar1.Value;
-            currentfile.Animation.GoTo(currentfile.Vertices, trackBar1.Value);
-            Invalidate();
+            if (keys == Keys.ShiftKey) //Shift supresses calculation
+            {
+                currentfile.Animation.GoTo(currentfile.Vertices, trackBar1.Value);
+                Invalidate();
+            }
         }
 
         //Create Keyframe
@@ -348,6 +352,11 @@ namespace Aeternal
             retp.X = p.X - cam.Location.X + (this.Width / 2);
             retp.Y = p.Y - cam.Location.Y + ((this.Height - 75) / 2);
             return retp;
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            keys = e.KeyData;
         }
     }
 }
