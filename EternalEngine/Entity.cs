@@ -36,7 +36,7 @@ namespace EternalEngine
 
         public PointF Location { get; set; }
 
-        public Brush FillColor { get; set; }
+        public Color FillColor { get; set; }
 
         public List<Line> Lines { get; set; }
 

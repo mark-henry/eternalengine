@@ -3,6 +3,7 @@ using System;
 
 namespace EternalEngine
 {
+    [Serializable]
     public class Vertex
     {
         public Vertex(PointF Location)

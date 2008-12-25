@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using EternalEngine;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Soap;
+using System.Windows.Input;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Aeternal
 {
@@ -24,7 +20,7 @@ namespace Aeternal
         int firstlink;
         int secondlink;
         bool success;
-        Keys keys = new Keys();
+        
 
         public Form1()
         {
@@ -34,7 +30,6 @@ namespace Aeternal
         private void Form1_Load(object sender, EventArgs e)
         {
             currentfile.Animation = new Animation();
-            currentfile.FillColor = Brushes.Olive;
             comboBox1.SelectedIndex = 0;
             comboBox2.SelectedIndex = 0;
             comboBox1.SelectedIndex = 1;
@@ -55,12 +50,12 @@ namespace Aeternal
             try
             {
                 SaveFileDialog svdlg = new SaveFileDialog();
-                svdlg.DefaultExt = "xml";
-                svdlg.Filter = "XML files (*.xml)|*.xml";
+                svdlg.DefaultExt = "eem";
+                svdlg.Filter = "Eternal Engine Model (*.eem)|*.eem";
                 svdlg.ShowDialog();
                 Stream file = svdlg.OpenFile();
-                SoapFormatter sf = new SoapFormatter();
-                sf.Serialize(file, currentfile);
+                BinaryFormatter bf = new BinaryFormatter();
+                bf.Serialize(file, currentfile);
                 file.Close();
             }
             catch (Exception ex) { MessageBox.Show(ex.Message, "Fail!!"); }
@@ -72,13 +67,13 @@ namespace Aeternal
             try
             {
                 OpenFileDialog opendlg = new OpenFileDialog();
-                opendlg.DefaultExt = "xml";
-                opendlg.Filter = "XML files (*.xml)|*.xml";
+                opendlg.DefaultExt = "eem";
+                opendlg.Filter = "Eternal Engine Model (*.eem)|*.eem";
                 opendlg.Multiselect = false;
                 opendlg.ShowDialog();
                 Stream file = opendlg.OpenFile();
-                SoapFormatter sf = new SoapFormatter();
-                currentfile = (AeternalEntity)sf.Deserialize(file);
+                BinaryFormatter bf = new BinaryFormatter();
+                currentfile = (AeternalEntity)bf.Deserialize(file);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }
         }
@@ -119,13 +114,12 @@ namespace Aeternal
         private void trackBar1_ValueChanged(object sender, EventArgs e)
         {
             label1.Text = "Frame " + trackBar1.Value.ToString() + "/" + trackBar1.Maximum.ToString();
-            if (keys == Keys.ShiftKey) //Shift supresses calculation
+            if ((Control.ModifierKeys & Keys.Shift) != Keys.Shift) //Shift supresses calculation
             {
                 currentfile.Animation.GoTo(currentfile.Vertices, trackBar1.Value);
                 Invalidate();
             }
         }
-
         //Create Keyframe
         private void button1_Click(object sender, EventArgs e)
         {
@@ -265,7 +259,7 @@ namespace Aeternal
             label1.Text = "Frame " + trackBar1.Value + "/" + trackBar1.Maximum;
         }
 
-        private void Form1_MouseDown(object sender, MouseEventArgs e)
+        private void Form1_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
@@ -314,7 +308,7 @@ namespace Aeternal
             }
         }
 
-        private void Form1_MouseMove(object sender, MouseEventArgs e)
+        private void Form1_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             if (CurrentTool == ModelerTools.MoveVertex && e.Button == MouseButtons.Left && success)
             {
@@ -345,18 +339,12 @@ namespace Aeternal
             retp.Y = p.Y + cam.Location.Y - ((this.Height - 75) / 2);
             return retp;
         }
-
         public PointF WorldtoScreen(PointF p)
         {
             PointF retp = new PointF(p.X, p.Y);
             retp.X = p.X - cam.Location.X + (this.Width / 2);
             retp.Y = p.Y - cam.Location.Y + ((this.Height - 75) / 2);
             return retp;
-        }
-
-        private void Form1_KeyDown(object sender, KeyEventArgs e)
-        {
-            keys = e.KeyData;
         }
     }
 }
