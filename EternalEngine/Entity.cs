@@ -74,6 +74,13 @@ namespace EternalEngine
                 m_animation = value;
             }
         }
+
+        public void Rotate(int degrees)
+        {
+            foreach (Vertex v in Vertices)
+            {
+            }
+        }
     }
 
     [Serializable]
