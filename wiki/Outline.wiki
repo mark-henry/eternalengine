@@ -13,7 +13,8 @@
     # Air resistance
     # Friction
     # Simple object collisions
-    # Materials
+    # Rigid-body
+    # Materials system
     # Density
     # Elasticity
    # Game Mechanics
