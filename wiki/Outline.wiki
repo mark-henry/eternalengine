@@ -20,6 +20,6 @@
    # Game Mechanics
     # Player control
     # AI - Any sort of complexity sort of a pipe dream at this point
-    #Weapons
+    # Weapons
   # Aeternal - model and animation editor
   # Eternal Engine Demo App - Demonstrates capabilities of Eternal Engine – not technically a game but will play roughly like one
