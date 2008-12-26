@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Drawing;
 
 namespace EternalEngine
 {
@@ -8,8 +10,8 @@ namespace EternalEngine
     {
         public Physics()
         {
-            Gravity = .25f;
-            AirResistance = .9f;
+            Gravity = .9f;
+            AirResistance = .95f;
             ElasticityCoefficient = .5f;
         }
 
@@ -29,6 +31,7 @@ namespace EternalEngine
                         v.InertiaY += Gravity;
                         v.InertiaX *= AirResistance;
                         v.InertiaY *= AirResistance;
+                        Debug.WriteLine(v.Inertia);
                     }
                 }
             }
@@ -42,7 +45,6 @@ namespace EternalEngine
                 for (int c = e + 1; c < entities.Count; c++)
                 {
                     //Check ent e against ent c for collide
-                    Debug.WriteLine(e.ToString() + c.ToString());
                 }
             }
         }
@@ -54,11 +56,8 @@ namespace EternalEngine
             {
                 if (e is ActorEntity || e is PropEntity)
                 {
-                    foreach (Vertex v in e.Vertices)
-                    {
-                        v.LocationX += v.InertiaX;
-                        v.LocationY += v.InertiaY;
-                    }
+                    e.Location = new PointF(e.Location.X + e.Vertices.Average<Vertex>(i => i.InertiaX),
+                        e.Location.Y + e.Vertices.Average<Vertex>(i => i.InertiaY));
                 }
             }
         }

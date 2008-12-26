@@ -34,7 +34,9 @@ namespace EternalEngineDemo
             {
                 foreach (Line l in ent.Lines)
                 {
-                    g.DrawLine(new Pen(l.Color, l.Width), WorldtoScreen(ent.Vertices[l.Index1].Location), WorldtoScreen(ent.Vertices[l.Index2].Location));
+                    g.DrawLine(new Pen(l.Color, l.Width), 
+                        WorldtoScreen(new PointF(ent.Vertices[l.Index1].Location.X + ent.Location.X, ent.Vertices[l.Index1].Location.Y + ent.Location.Y)), 
+                        WorldtoScreen(new PointF(ent.Vertices[l.Index2].Location.X + ent.Location.X, ent.Vertices[l.Index2].Location.Y + ent.Location.Y)));
                     //Debug.WriteLine(WorldtoScreen(ent.Vertices[l.Index1].Location).ToString() + "\n" + WorldtoScreen(ent.Vertices[l.Index2].Location).ToString());
                 }
             }
