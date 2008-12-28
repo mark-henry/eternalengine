@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing.Drawing2D;
 
 namespace AEternal
 {
@@ -32,6 +33,7 @@ namespace AEternal
         private void Form1_Load(object sender, EventArgs e)
         {
             currentfile.Animation = new Animation();
+            currentfile.Material = Material.Steel;
             comboBox1.SelectedIndex = 0;
             comboBox2.SelectedIndex = 0;
             comboBox1.SelectedIndex = 1;
@@ -44,6 +46,40 @@ namespace AEternal
                 trackBar1.Value++;
             }
             else { trackBar1.Value = 0; }
+        }
+
+        private void button1_Click(object sender, EventArgs e) //Create Keyframe 
+        {
+            if (currentfile.Animation.Keyframes.ContainsKey(trackBar1.Value))
+            {
+                currentfile.Animation.Keyframes[trackBar1.Value] = new Keyframe(currentfile.Vertices);
+            }
+            else
+            {
+                currentfile.Animation.Keyframes.Add(trackBar1.Value, new Keyframe(currentfile.Vertices));
+            }
+            Invalidate(new Rectangle(0, 0, 75, this.Height));
+        }
+
+        private void button2_Click(object sender, EventArgs e) //Play/Pause 
+        {
+            if (button2.Text == "Play")
+            {
+                button2.Text = "Pause";
+                timer1.Enabled = true;
+            }
+            else
+            {
+                button2.Text = "Play";
+                timer1.Enabled = false;
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e) //Stop 
+        {
+            timer1.Enabled = false;
+            button2.Text = "Play";
+            trackBar1.Value = 0;
         }
 
         private void button4_Click(object sender, EventArgs e) //Save 
@@ -72,31 +108,16 @@ namespace AEternal
                 opendlg.DefaultExt = "eem";
                 opendlg.Filter = "Eternal Engine Model (*.eem)|*.eem";
                 opendlg.Multiselect = false;
-                opendlg.ShowDialog();
-                //if (opendlg.ShowDialog() != DialogResult.Cancel)
-                //{
+                if (opendlg.ShowDialog() != DialogResult.Cancel)
+                {
                     Stream file = opendlg.OpenFile();
                     BinaryFormatter bf = new BinaryFormatter();
                     currentfile = (AEternalEntity)bf.Deserialize(file);
                     file.Close();
-                //}
+                }
             }
             catch (Exception ex) { MessageBox.Show(ex.Message, "Fail!!"); }
-            panel1.Invalidate();
-        }
-
-        private void button2_Click(object sender, EventArgs e) //Play/Pause 
-        {
-            if (button2.Text == "Play")
-            {
-                button2.Text = "Pause";
-                timer1.Enabled = true;
-            }
-            else
-            {
-                button2.Text = "Play";
-                timer1.Enabled = false;
-            }
+            Invalidate(new Rectangle(0, 0, 75, this.Height));
         }
 
         private void maskedTextBox2_TextChanged(object sender, EventArgs e) //Speed 
@@ -107,34 +128,14 @@ namespace AEternal
             }
         }
 
-        private void button3_Click(object sender, EventArgs e) //Stop 
-        {
-            timer1.Enabled = false;
-            button2.Text = "Play";
-            trackBar1.Value = 0;
-        }
-
         private void trackBar1_ValueChanged(object sender, EventArgs e) //Trackbar 
         {
             label1.Text = "Frame " + trackBar1.Value.ToString() + "/" + trackBar1.Maximum.ToString();
             if ((Control.ModifierKeys & Keys.Shift) != Keys.Shift) //Shift supresses calculation
             {
                 currentfile.Animation.GoTo(currentfile.Vertices, trackBar1.Value);
-                Invalidate();
+                Invalidate(new Rectangle(75, 0, this.Width - 75, this.Height));
             }
-        }
-
-        private void button1_Click(object sender, EventArgs e) //Create Keyframe 
-        {
-            if (currentfile.Animation.Keyframes.ContainsKey(trackBar1.Value))
-            {
-                currentfile.Animation.Keyframes[trackBar1.Value] = new Keyframe(currentfile.Vertices);
-            }
-            else
-            {
-                currentfile.Animation.Keyframes.Add(trackBar1.Value, new Keyframe(currentfile.Vertices));
-            }
-            panel1.Invalidate();
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e) //Mode 
@@ -183,7 +184,6 @@ namespace AEternal
                     break;
             }
         }
-
         private void BuildTitleText()
         {
             if (currentfile.ModelName != null)
@@ -219,51 +219,27 @@ namespace AEternal
         {
             Graphics g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            foreach (Line l in currentfile.Lines)
+            foreach (Line l in currentfile.Lines) //Lines
             {
                 g.DrawLine(new Pen(l.Color, l.Width), WorldtoScreen(currentfile.Vertices[l.Index1].Location), WorldtoScreen(currentfile.Vertices[l.Index2].Location));
             }
-            foreach (Vertex v in currentfile.Vertices)
+            foreach (Vertex v in currentfile.Vertices) //Vertices
             {
                 g.DrawEllipse(new Pen(Color.Black, 2), WorldtoScreen(v.Location).X - .5f, WorldtoScreen(v.Location).Y - .5f, 1, 1);
             }
-            if (currentfile.SelectedVertex != -1)
+            if (currentfile.SelectedVertex != -1) //Selected gets a red circle
             {
                 PointF sv = WorldtoScreen(currentfile.Vertices[currentfile.SelectedVertex].Location);
                 g.DrawEllipse(new Pen(Color.Red), new RectangleF(sv.X - 1.5f, sv.Y - 1.5f, 3, 3));
                 g.DrawString(currentfile.Vertices[currentfile.SelectedVertex].Location.ToString(),
                     new Font("Agency FB", 9), Brushes.Black, sv.X + 12, sv.Y + 10);
             }
-            //if (currentfile.Animation.NextKey == null)
-            //{
-            //    g.DrawString("nextkey null", new Font("Agency FB", 9),
-            //        Brushes.Black, 0, 20);
-            //}
-            //else
-            //{
-            //    g.DrawString(currentfile.Animation.NextKey.ToString(), new Font("Agency FB", 9),
-            //        Brushes.Black, 0, 20);
-            //}
-            //if (currentfile.Animation.PreviousKey == null)
-            //{
-            //    g.DrawString("prevkey null", new Font("Agency FB", 9),
-            //        Brushes.Black, 0, 0);
-            //}
-            //else
-            //{
-            //    g.DrawString(currentfile.Animation.PreviousKey.ToString(), new Font("Agency FB", 9),
-            //        Brushes.Black, 0, 0);
-            //}
-        }
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-            Graphics g = e.Graphics;
-            foreach (KeyValuePair<int, Keyframe> k in currentfile.Animation.Keyframes)
+            string keylist = "Keyframes:\n";        //Keyframes list
+            foreach(KeyValuePair<int, Keyframe> key in currentfile.Animation.Keyframes)
             {
-                g.DrawLine(new Pen(Brushes.Blue, 10f),
-                    (k.Key) * ((trackBar1.Width - 15) / trackBar1.Maximum) + 10, 5,   // trackBar1.Location.Y + 5,
-                    (k.Key) * ((trackBar1.Width - 15) / trackBar1.Maximum) + 10, 10); //trackBar1.Location.Y + 8);
+                keylist += "Frame " + key.Key + "\n";
             }
+            g.DrawString(keylist, new Font(FontFamily.GenericMonospace, 9), Brushes.Blue, 0, 0);
         }
 
         private void numericUpDown3_ValueChanged(object sender, EventArgs e) // # of Frames
@@ -289,9 +265,15 @@ namespace AEternal
                             else if (success && linkstep == 2)
                             {
                                 secondlink = currentfile.SelectedVertex;
-                                currentfile.Lines.Add(new Line(firstlink, secondlink, Color.Green, 2));
-                                linkstep = 1;
-                                Debug.WriteLine("Warning: Create line does not check for same vertex twice");   
+                                if (firstlink != secondlink)
+                                {
+                                    currentfile.Lines.Add(new Line(firstlink, secondlink, Color.Green, 2));
+                                    linkstep = 1;
+                                }
+                                else
+                                {
+                                    Debug.WriteLine("Info: Selected same Vertex twice in linking with Line");
+                                }
                             }
                             Invalidate();
                             break;
@@ -327,7 +309,7 @@ namespace AEternal
             if (CurrentTool == ModelerTools.MoveVertex && e.Button == MouseButtons.Left && success)
             {
                 currentfile.Vertices[currentfile.SelectedVertex].Location = ScreenToWorld((PointF)e.Location);
-                Invalidate();
+                Invalidate(new Rectangle(75, 0, this.Width - 75, this.Height));
             }
 
             RectangleF hit = new RectangleF(ScreenToWorld((PointF)e.Location).X - 1.5f, ScreenToWorld((PointF)e.Location).Y - 1.5f, 3, 3);
@@ -339,11 +321,11 @@ namespace AEternal
                 {
                     success = true;
                     currentfile.SelectedVertex = ii;
-                    Invalidate();
                 }
                 ii++;
             }
-            if (!success) { currentfile.SelectedVertex = -1; Invalidate(); }
+            if (!success) { currentfile.SelectedVertex = -1; Invalidate(new Rectangle(100, 0, this.Width - 100, this.Height)); }
+            else { Invalidate(new Rectangle(e.X - 10, e.Y - 10, 110, 60)); }
         }
 
         public PointF ScreenToWorld(PointF p)
