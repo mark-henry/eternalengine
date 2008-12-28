@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C# Express 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aeternal", "Aeternal.csproj", "{11D97019-CECC-488D-BAB3-D626920B7160}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AEternal", "AEternal.csproj", "{11D97019-CECC-488D-BAB3-D626920B7160}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EternalEngine", "..\EternalEngine\EternalEngine.csproj", "{5BD088C5-A03E-4227-A87B-B0EA9B088F60}"
 EndProject

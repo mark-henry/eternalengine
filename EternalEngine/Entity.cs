@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Diagnostics;
 
 namespace EternalEngine
 {
@@ -24,6 +25,7 @@ namespace EternalEngine
         {
             get
             {
+                Debug.WriteLine("Warning: Accessed property Entity.Mass; this prop needs rewriting");
                 double length = 0;
                 foreach (Line l in Lines)
                 {
@@ -32,6 +34,22 @@ namespace EternalEngine
                 }
                 return length*Material.Density;
             }
+        }
+
+        public double GetVertexMass(int index)
+        {
+            double ret = -1;
+            foreach (Line l in Lines)
+            {
+
+            }
+            return ret;
+        }
+
+        public double GetLineLength(int index)
+        {
+            return Math.Sqrt(Math.Pow((Vertices[Lines[index].Index1].Location.X - Vertices[Lines[index].Index2].Location.X), 2)
+                + Math.Pow((Vertices[Lines[index].Index1].Location.Y - Vertices[Lines[index].Index2].Location.Y), 2));
         }
 
         public PointF Location { get; set; }
@@ -44,7 +62,7 @@ namespace EternalEngine
 
         public Material Material { get; set; }
 
-        public PointF CenterofMass { get { throw new NotImplementedException("CenterofMass"); } }
+        public PointF CenterofMass { get { throw new NotImplementedException("Entity.CenterofMass"); } }
     }
 
     [Serializable]
