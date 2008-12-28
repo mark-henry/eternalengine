@@ -5,7 +5,7 @@ namespace EternalEngine
     [Serializable]
     public class Material
     {
-        private static Material matSteel = new Material(10, .1);
+        private static Material matSteel = new Material(2.75, .2);
         public static Material Steel { get { return matSteel; } }
 
         public Material(double Density, double Elasticity)
@@ -15,7 +15,7 @@ namespace EternalEngine
         }
 
         /// <summary>
-        /// Weight of line per 1 unit.
+        /// Weight of line per 1 pixel of length.
         /// </summary>
         public double Density { get; set; }
 
