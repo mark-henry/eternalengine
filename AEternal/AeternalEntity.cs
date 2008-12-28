@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using EternalEngine;
 
-namespace Aeternal
+namespace AEternal
 {
     [Serializable]
-    public class AeternalEntity : ActorEntity
+    public class AEternalEntity : ActorEntity
     {
-        public AeternalEntity()
+        public AEternalEntity()
         {
         }
 

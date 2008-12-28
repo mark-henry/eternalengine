@@ -1,4 +1,4 @@
-﻿namespace Aeternal
+﻿namespace AEternal
 {
     partial class Form1
     {
@@ -67,7 +67,7 @@
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Size = new System.Drawing.Size(981, 45);
             this.trackBar1.TabIndex = 0;
-            this.trackBar1.ValueChanged += new System.EventHandler(this.trackBar1_ValueChanged);
+            this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_ValueChanged);
             // 
             // label1
             // 
@@ -117,6 +117,7 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1002, 68);
             this.panel1.TabIndex = 8;
+            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // numericUpDown3
             // 

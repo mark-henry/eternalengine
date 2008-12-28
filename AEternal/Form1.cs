@@ -5,15 +5,17 @@ using EternalEngine;
 using System.IO;
 using System.Windows.Input;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Collections.Generic;
+using System.Diagnostics;
 
-namespace Aeternal
+namespace AEternal
 {
     public partial class Form1 : Form
     {
         Camera cam = new Camera(new PointF(0, 0));
         enum AnimatorModes { Animator, Modeler }
         AnimatorModes Mode;
-        AeternalEntity currentfile = new AeternalEntity();
+        AEternalEntity currentfile = new AEternalEntity();
         enum ModelerTools { MoveVertex, NewVertex, LinkVerticesWithLine, DeleteVertex }
         ModelerTools CurrentTool;
         int linkstep = 1;
@@ -44,25 +46,25 @@ namespace Aeternal
             else { trackBar1.Value = 0; }
         }
 
-        //Save
-        private void button4_Click(object sender, EventArgs e)
+        private void button4_Click(object sender, EventArgs e) //Save 
         {
             try
             {
                 SaveFileDialog svdlg = new SaveFileDialog();
                 svdlg.DefaultExt = "eem";
                 svdlg.Filter = "Eternal Engine Model (*.eem)|*.eem";
-                svdlg.ShowDialog();
-                Stream file = svdlg.OpenFile();
-                BinaryFormatter bf = new BinaryFormatter();
-                bf.Serialize(file, currentfile);
-                file.Close();
+                if (svdlg.ShowDialog() != DialogResult.Cancel)
+                {
+                    Stream file = svdlg.OpenFile();
+                    BinaryFormatter bf = new BinaryFormatter();
+                    bf.Serialize(file, currentfile);
+                    file.Close();
+                }
             }
             catch (Exception ex) { MessageBox.Show(ex.Message, "Fail!!"); }
         }
-
-        //Open
-        private void button5_Click(object sender, EventArgs e)
+  
+        private void button5_Click(object sender, EventArgs e) //Open 
         {
             try
             {
@@ -71,15 +73,19 @@ namespace Aeternal
                 opendlg.Filter = "Eternal Engine Model (*.eem)|*.eem";
                 opendlg.Multiselect = false;
                 opendlg.ShowDialog();
-                Stream file = opendlg.OpenFile();
-                BinaryFormatter bf = new BinaryFormatter();
-                currentfile = (AeternalEntity)bf.Deserialize(file);
+                //if (opendlg.ShowDialog() != DialogResult.Cancel)
+                //{
+                    Stream file = opendlg.OpenFile();
+                    BinaryFormatter bf = new BinaryFormatter();
+                    currentfile = (AEternalEntity)bf.Deserialize(file);
+                    file.Close();
+                //}
             }
-            catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }
+            catch (Exception ex) { MessageBox.Show(ex.Message, "Fail!!"); }
+            panel1.Invalidate();
         }
 
-        //Play/Pause
-        private void button2_Click(object sender, EventArgs e)
+        private void button2_Click(object sender, EventArgs e) //Play/Pause 
         {
             if (button2.Text == "Play")
             {
@@ -93,8 +99,7 @@ namespace Aeternal
             }
         }
 
-        //Speed
-        private void maskedTextBox2_TextChanged(object sender, EventArgs e)
+        private void maskedTextBox2_TextChanged(object sender, EventArgs e) //Speed 
         {
             if (maskedTextBox2.Text != "" && Int32.Parse(maskedTextBox2.Text) != 0)
             {
@@ -102,16 +107,14 @@ namespace Aeternal
             }
         }
 
-        //Stop
-        private void button3_Click(object sender, EventArgs e)
+        private void button3_Click(object sender, EventArgs e) //Stop 
         {
             timer1.Enabled = false;
             button2.Text = "Play";
             trackBar1.Value = 0;
         }
 
-        //Trackbar
-        private void trackBar1_ValueChanged(object sender, EventArgs e)
+        private void trackBar1_ValueChanged(object sender, EventArgs e) //Trackbar 
         {
             label1.Text = "Frame " + trackBar1.Value.ToString() + "/" + trackBar1.Maximum.ToString();
             if ((Control.ModifierKeys & Keys.Shift) != Keys.Shift) //Shift supresses calculation
@@ -121,8 +124,7 @@ namespace Aeternal
             }
         }
 
-        //Create Keyframe
-        private void button1_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e) //Create Keyframe 
         {
             if (currentfile.Animation.Keyframes.ContainsKey(trackBar1.Value))
             {
@@ -132,10 +134,10 @@ namespace Aeternal
             {
                 currentfile.Animation.Keyframes.Add(trackBar1.Value, new Keyframe(currentfile.Vertices));
             }
+            panel1.Invalidate();
         }
 
-        //Mode
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e) //Mode 
         {
             switch (comboBox1.SelectedIndex)
             {
@@ -177,6 +179,7 @@ namespace Aeternal
                     label6.Enabled = false;
                     label7.Enabled = false;
                     trackBar1.Enabled = false;
+                    currentfile.Animation.GoTo(currentfile.Vertices, 0);
                     break;
             }
         }
@@ -185,16 +188,15 @@ namespace Aeternal
         {
             if (currentfile.ModelName != null)
             {
-                this.Text = "Aeternal - " + Mode.ToString() + " Mode - " + currentfile.ModelName;
+                this.Text = "AEternal - " + Mode.ToString() + " Mode - " + currentfile.ModelName;
             }
             else
             {
-                this.Text = "Aeternal - " + Mode.ToString() + " Mode";
+                this.Text = "AEternal - " + Mode.ToString() + " Mode";
             }
         }
 
-        //Tool
-        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e) //Tool 
         {
             switch (comboBox2.SelectedIndex)
             {
@@ -213,7 +215,7 @@ namespace Aeternal
             }
         }
 
-        private void Form1_Paint(object sender, PaintEventArgs e)
+        private void Form1_Paint(object sender, PaintEventArgs e) //Paint 
         {
             Graphics g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
@@ -253,8 +255,18 @@ namespace Aeternal
             //        Brushes.Black, 0, 0);
             //}
         }
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            foreach (KeyValuePair<int, Keyframe> k in currentfile.Animation.Keyframes)
+            {
+                g.DrawLine(new Pen(Brushes.Blue, 10f),
+                    (k.Key) * ((trackBar1.Width - 15) / trackBar1.Maximum) + 10, 5,   // trackBar1.Location.Y + 5,
+                    (k.Key) * ((trackBar1.Width - 15) / trackBar1.Maximum) + 10, 10); //trackBar1.Location.Y + 8);
+            }
+        }
 
-        private void numericUpDown3_ValueChanged(object sender, EventArgs e)
+        private void numericUpDown3_ValueChanged(object sender, EventArgs e) // # of Frames
         {
             trackBar1.Maximum = (int)numericUpDown3.Value;
             label1.Text = "Frame " + trackBar1.Value + "/" + trackBar1.Maximum;
@@ -279,6 +291,7 @@ namespace Aeternal
                                 secondlink = currentfile.SelectedVertex;
                                 currentfile.Lines.Add(new Line(firstlink, secondlink, Color.Green, 2));
                                 linkstep = 1;
+                                Debug.WriteLine("Warning: Create line does not check for same vertex twice");   
                             }
                             Invalidate();
                             break;
