@@ -31,7 +31,7 @@ namespace EternalEngine
                         v.InertiaY += Gravity;
                         v.InertiaX *= AirResistance;
                         v.InertiaY *= AirResistance;
-                        Debug.WriteLine(v.Inertia);
+                        //Debug.WriteLine(v.Inertia);
                     }
                 }
             }

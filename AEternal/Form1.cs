@@ -240,6 +240,8 @@ namespace AEternal
                 keylist += "Frame " + key.Key + "\n";
             }
             g.DrawString(keylist, new Font(FontFamily.GenericMonospace, 9), Brushes.Blue, 0, 0);
+
+            g.DrawEllipse(new Pen(Color.Indigo, 2), WorldtoScreen(currentfile.CenterofMass).X - .5f, WorldtoScreen(currentfile.CenterofMass).Y - .5f, 1, 1);
         }
 
         private void numericUpDown3_ValueChanged(object sender, EventArgs e) // # of Frames

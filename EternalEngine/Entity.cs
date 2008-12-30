@@ -28,7 +28,7 @@ namespace EternalEngine
             {
                 double length = 0;
                 for (int i = 0; i < Lines.Count; i++) { length += LineLength(i); }
-                return length*Material.Density;
+                return length * Material.Density;
             }
         }
 
@@ -48,12 +48,17 @@ namespace EternalEngine
                 + Math.Pow((Vertices[Lines[index].Index1].Location.Y - Vertices[Lines[index].Index2].Location.Y), 2));
         }
 
-        public void Rotate(int degrees)
+        public void Rotate(double theta)
         {
+            theta *= -Math.PI / 180;
             PointF cm = CenterofMass;
+            double inittheta;
+            double l;
             foreach (Vertex v in Vertices)
             {
-                v.Location = new PointF((float)(Math.Cos(degrees) * (v.Location.X - cm.X)) + cm.X, (float)(Math.Sin(degrees) * (v.Location.Y - cm.Y)) + cm.Y);
+                inittheta = Math.Atan2(cm.Y - v.Location.Y, cm.X - v.Location.X);
+                l = Math.Sqrt(Math.Pow(v.Location.X - cm.X, 2) + Math.Pow(v.Location.Y - cm.Y, 2));
+                v.Location = new PointF(cm.X + (float)(l * Math.Cos(theta + inittheta)), cm.Y + (float)(l * Math.Sin(theta + inittheta)));
             }
         }
 
