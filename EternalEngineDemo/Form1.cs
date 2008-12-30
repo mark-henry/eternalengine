@@ -20,11 +20,13 @@ namespace EternalEngineDemo
             map.Entities[0].Lines.Add(new Line(0, 1, Color.Green, 2f));
             map.Entities[0].Vertices.Add(new Vertex(50,-100));
             map.Entities[0].Vertices.Add(new Vertex(100, -50));
+            map.Entities[0].Material = Material.Steel;
 
             map.Entities.Add(new BrushEntity());
             map.Entities[1].Lines.Add(new Line(0, 1, Color.Firebrick, 2f));
             map.Entities[1].Vertices.Add(new Vertex(0, 150));
             map.Entities[1].Vertices.Add(new Vertex(150, 150));
+            map.Entities[1].Material = Material.Steel;
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
@@ -41,6 +43,7 @@ namespace EternalEngineDemo
                 }
             }
             g.DrawString(ticker.ToString(), new Font(FontFamily.GenericMonospace, 10), Brushes.Black, new PointF(0, 0));
+            //g.DrawEllipse(new Pen(Color.Indigo, 2), WorldtoScreen(map.Entities[1].CenterofMass).X - .5f, WorldtoScreen(map.Entities[1].CenterofMass).Y - .5f, 1, 1);
         }
 
         public PointF ScreenToWorld(PointF p)
@@ -64,6 +67,7 @@ namespace EternalEngineDemo
             //Invalidate(new Rectangle(0, 0, 40, 15));
             phys.ApplyGravityandAirResistance(map.Entities);
             phys.ApplyInertia(map.Entities);
+            map.Entities[1].Rotate(1);
             Invalidate();
         }
     }
