@@ -9,8 +9,8 @@ namespace EternalEngineDemo
     {
         private Camera cam = new Camera();
         private Map map = new Map();
-        private Physics phys = new Physics();
         int ticker = 0;
+        private Physics phys;
 
         public Form1()
         {
@@ -27,7 +27,9 @@ namespace EternalEngineDemo
             map.Entities[1].Vertices.Add(new Vertex(0, 150));
             map.Entities[1].Vertices.Add(new Vertex(150, 150));
             map.Entities[1].Material = Material.Steel;
-        }
+
+            phys = new Physics(map.Entities);
+       }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
@@ -44,6 +46,8 @@ namespace EternalEngineDemo
             }
             g.DrawString(ticker.ToString(), new Font(FontFamily.GenericMonospace, 10), Brushes.Black, new PointF(0, 0));
             //g.DrawEllipse(new Pen(Color.Indigo, 2), WorldtoScreen(map.Entities[1].CenterofMass).X - .5f, WorldtoScreen(map.Entities[1].CenterofMass).Y - .5f, 1, 1);
+            RectangleF rf = new RectangleF(WorldtoScreen(map.Entities[0].PhysBox.Location), map.Entities[0].PhysBox.Size);
+            g.DrawRectangle(new Pen(Brushes.Coral, 2f), rf.X, rf.Y, rf.Width, rf.Height);
         }
 
         public PointF ScreenToWorld(PointF p)
@@ -65,9 +69,10 @@ namespace EternalEngineDemo
         {
             ticker++;
             //Invalidate(new Rectangle(0, 0, 40, 15));
-            phys.ApplyGravityandAirResistance(map.Entities);
-            phys.ApplyInertia(map.Entities);
-            map.Entities[1].Rotate(1);
+            phys.ApplyGravityandAirResistance();
+            phys.ApplyInertia();
+            phys.CollisionDetection();
+            //map.Entities[1].Rotate(1);
             Invalidate();
         }
     }
