@@ -8,8 +8,9 @@ namespace EternalEngine
 {
     public class Physics
     {
-        public Physics()
+        public Physics(List<Entity> entities)
         {
+            m_entities = entities;
             Gravity = .9f;
             AirResistance = .95f;
             ElasticityCoefficient = .5f;
@@ -20,9 +21,12 @@ namespace EternalEngine
         public float ElasticityCoefficient { get; set; }
         public float Friction { get; set; }
 
-        public void ApplyGravityandAirResistance(List<Entity> entities)
+        private List<Entity> m_entities;
+        public List<Entity> Entities { get { return m_entities; } }
+
+        public void ApplyGravityandAirResistance()
         {
-            foreach (Entity e in entities)
+            foreach (Entity e in m_entities)
             {
                 if (e is ActorEntity || e is PropEntity)
                 {
@@ -37,22 +41,25 @@ namespace EternalEngine
             }
         }
  
-        public void CollisionDetection(List<Entity> entities)
+        public void CollisionDetection()
         {
-            List<Entity> relevant = entities.FindAll(IsPhysicsEntity);
-            for (int e = 0; e < entities.Count; e++)
+            List<Entity> relevant = m_entities.FindAll(e => !(e is SceneryEntity));
+            for (int e = 0; e < m_entities.Count; e++)
             {
-                for (int c = e + 1; c < entities.Count; c++)
+                for (int c = e + 1; c < m_entities.Count; c++)
                 {
                     //Check ent e against ent c for collide
+                    if (m_entities[e].PhysBox.IntersectsWith(m_entities[c].PhysBox))
+                    {
+                        Debug.Print("Physics: PhysBox collision between entity {0} and entity {1}", e, c);
+                    }
                 }
             }
         }
-        private bool IsPhysicsEntity(Entity ent) { return !(ent is SceneryEntity); }
 
-        public void ApplyInertia(List<Entity> entities)
+        public void ApplyInertia()
         {
-            foreach (Entity e in entities)
+            foreach (Entity e in m_entities)
             {
                 if (e is ActorEntity || e is PropEntity)
                 {

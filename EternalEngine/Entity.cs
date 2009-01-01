@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Diagnostics;
 using System.Collections;
+using System.Linq;
 
 namespace EternalEngine
 {
@@ -59,6 +60,20 @@ namespace EternalEngine
                 inittheta = Math.Atan2(cm.Y - v.Location.Y, cm.X - v.Location.X);
                 l = Math.Sqrt(Math.Pow(v.Location.X - cm.X, 2) + Math.Pow(v.Location.Y - cm.Y, 2));
                 v.Location = new PointF(cm.X + (float)(l * Math.Cos(theta + inittheta)), cm.Y + (float)(l * Math.Sin(theta + inittheta)));
+            }
+        }
+
+        /// <summary>
+        /// Returns a RectangleF describing where the Entity will be next frame
+        /// </summary>
+        public RectangleF PhysBox
+        {
+            get
+            {
+                return new RectangleF(Location.X + Vertices.Min<Vertex>(v => v.Location.X) + Vertices.Average<Vertex>(v => v.Inertia.X),
+                    Location.Y + Vertices.Min<Vertex>(v => v.Location.Y) + Vertices.Average<Vertex>(v => v.Inertia.Y),
+                    Vertices.Max<Vertex>(v => v.Location.X) - Vertices.Min<Vertex>(v => v.Location.X),
+                    Vertices.Max<Vertex>(v => v.Location.Y) - Vertices.Min<Vertex>(v => v.Location.Y));
             }
         }
 
