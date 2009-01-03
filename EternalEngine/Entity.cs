@@ -77,6 +77,13 @@ namespace EternalEngine
             }
         }
 
+        public SizeF InertialDisplacement()
+        {
+            return new SizeF(Vertices.Average<Vertex>(v => v.Inertia.X),
+                        Vertices.Average<Vertex>(v => v.Inertia.Y));
+        }
+
+
         public PointF Location { get; set; }
 
         public Color FillColor { get; set; }

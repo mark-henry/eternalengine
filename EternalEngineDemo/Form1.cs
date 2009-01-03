@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using EternalEngine;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace EternalEngineDemo
 {
@@ -9,7 +10,7 @@ namespace EternalEngineDemo
     {
         private Camera cam = new Camera();
         private Map map = new Map();
-        int ticker = 0;
+        private int ticker = 0;
         private Physics phys;
 
         public Form1()
@@ -24,8 +25,8 @@ namespace EternalEngineDemo
 
             map.Entities.Add(new BrushEntity());
             map.Entities[1].Lines.Add(new Line(0, 1, Color.Firebrick, 2f));
-            map.Entities[1].Vertices.Add(new Vertex(0, 150));
-            map.Entities[1].Vertices.Add(new Vertex(150, 150));
+            map.Entities[1].Vertices.Add(new Vertex(0, 0));
+            map.Entities[1].Vertices.Add(new Vertex(150, 0));
             map.Entities[1].Material = Material.Steel;
 
             phys = new Physics(map.Entities);
@@ -69,11 +70,27 @@ namespace EternalEngineDemo
         {
             ticker++;
             //Invalidate(new Rectangle(0, 0, 40, 15));
+            phys.CollisionDetection();
             phys.ApplyGravityandAirResistance();
             phys.ApplyInertia();
-            phys.CollisionDetection();
             //map.Entities[1].Rotate(1);
             Invalidate();
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch(e.KeyCode)
+            {
+                case Keys.Space:
+                    timer1.Enabled = !timer1.Enabled;
+                    break;
+                case Keys.D1:
+                    timer1.Interval = 40;
+                    break;
+                case Keys.D2:
+                    timer1.Interval = 1000;
+                    break;
+            }
         }
     }
 }
