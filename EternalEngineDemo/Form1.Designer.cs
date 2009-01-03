@@ -35,7 +35,7 @@
             // timer1
             // 
             this.timer1.Enabled = true;
-            this.timer1.Interval = 40;
+            this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // Form1
@@ -46,6 +46,7 @@
             this.Name = "Form1";
             this.Text = "Eternal Engine Demo App";
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.ResumeLayout(false);
 
         }
