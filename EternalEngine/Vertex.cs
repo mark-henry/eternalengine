@@ -9,42 +9,12 @@ namespace EternalEngine
         public Vertex(PointF Location)
         {
             this.Location = Location;
-            Inertia = new PointF(0, 0);
         }
 
         public Vertex(float X, float Y)
         {
             this.Location = new PointF(X, Y);
-            Inertia = new PointF(0, 0);
         }
-
-        private PointF m_inertia;
-        public PointF Inertia { get { return m_inertia; } set { m_inertia = value; } }
-
-        public float InertiaX
-        {
-            get
-            {
-                return Inertia.X;
-            }
-            set
-            {
-                m_inertia.X = value;
-            }
-        }
-
-        public float InertiaY
-        {
-            get
-            {
-                return Inertia.Y;
-            }
-            set
-            {
-                m_inertia.Y = value;
-            }
-        }
-
 
         private PointF m_location;
         /// <summary>
