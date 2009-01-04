@@ -14,7 +14,7 @@ namespace EternalEngine
             m_entities = entities;
             Gravity = .9f;
             AirResistance = .95f;
-            ElasticityCoefficient = -10f;
+            ElasticityCoefficient = -4f;
         }
 
         public float Gravity { get; set; }
@@ -29,16 +29,7 @@ namespace EternalEngine
         {
             foreach (Entity e in m_entities)
             {
-                if (e is ActorEntity || e is PropEntity)
-                {
-                    foreach (Vertex v in e.Vertices)
-                    {
-                        v.InertiaY += Gravity;
-                        v.InertiaX *= AirResistance;
-                        v.InertiaY *= AirResistance;
-                        //Debug.WriteLine(v.Inertia);
-                    }
-                }
+                e.Inertia = new SizeF(e.Inertia.Width * AirResistance, (e.Inertia.Height + Gravity) * AirResistance);
             }
         }
 
@@ -60,14 +51,13 @@ namespace EternalEngine
                             foreach (Line l in ents[c].Lines)
                             {
                                 intersection = Intersection(v.Location + new SizeF(ents[e].Location),
-                                    v.Location + new SizeF(ents[e].Location) + ents[e].InertialDisplacement(),
-                                    ents[c].Vertices[l.Index1].Location + ents[c].InertialDisplacement(),
-                                    ents[c].Vertices[l.Index2].Location + ents[c].InertialDisplacement());
-                                if (intersection != PointF.Empty)
+                                    v.Location + new SizeF(ents[e].Location) + ents[e].Inertia,
+                                    ents[c].Vertices[l.Index1].Location + ents[c].Inertia,
+                                    ents[c].Vertices[l.Index2].Location + ents[c].Inertia);
+                                if (!intersection.IsEmpty)
                                 {
                                     Debug.WriteLine("Physics: projected collision @ " + intersection);
-                                    v.Inertia = new PointF((v.Inertia.X * ElasticityCoefficient * ents[e].Material.Elasticity),
-                                        v.Inertia.Y * ElasticityCoefficient * ents[e].Material.Elasticity + Gravity);
+                                    ents[e].Inertia = new SizeF(ents[e].Inertia.Width, ents[e].Inertia.Height * ents[e].Material.Elasticity * ElasticityCoefficient);
                                 }
                             }
                         }
@@ -82,7 +72,7 @@ namespace EternalEngine
             {
                 if (e is ActorEntity || e is PropEntity)
                 {
-                    e.Location = e.Location + e.InertialDisplacement();
+                    e.Location = e.Location + e.Inertia;
                 }
             }
         }

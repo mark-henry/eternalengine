@@ -70,19 +70,18 @@ namespace EternalEngine
         {
             get
             {
-                return new RectangleF(Location.X + Vertices.Min<Vertex>(v => v.Location.X) + Vertices.Average<Vertex>(v => v.Inertia.X),
-                    Location.Y + Vertices.Min<Vertex>(v => v.Location.Y) + Vertices.Average<Vertex>(v => v.Inertia.Y),
+                return new RectangleF(Location.X + Vertices.Min<Vertex>(v => v.Location.X) + Inertia.Width,
+                    Location.Y + Vertices.Min<Vertex>(v => v.Location.Y) + Inertia.Height,
                     Vertices.Max<Vertex>(v => v.Location.X) - Vertices.Min<Vertex>(v => v.Location.X),
                     Vertices.Max<Vertex>(v => v.Location.Y) - Vertices.Min<Vertex>(v => v.Location.Y));
             }
         }
 
-        public SizeF InertialDisplacement()
-        {
-            return new SizeF(Vertices.Average<Vertex>(v => v.Inertia.X),
-                        Vertices.Average<Vertex>(v => v.Inertia.Y));
-        }
+        public SizeF Inertia { get; set; }
 
+        public float AngularInertia { get; set; }
+
+        public float MomentofInertia { get; set; }
 
         public PointF Location { get; set; }
 
@@ -94,7 +93,7 @@ namespace EternalEngine
 
         public Material Material { get; set; }
 
-        public PointF CenterofMass 
+        public PointF CenterofMass
         {
             get
             {
@@ -111,7 +110,7 @@ namespace EternalEngine
                     boty += VertexMass(i);
                 }
 
-                if (botx == 0 || boty == 0) { return new PointF(0,0); }
+                if (botx == 0 || boty == 0) { return new PointF(0, 0); }
                 return new PointF((float)(topx / botx), (float)(topy / boty));
             }
         }
@@ -134,8 +133,8 @@ namespace EternalEngine
         private Animation m_animation;
         public Animation Animation
         {
-            get { return m_animation;} 
-            set 
+            get { return m_animation; }
+            set
             {
                 if (value.ModelName != this.ModelName)
                 {
