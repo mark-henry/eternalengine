@@ -2,7 +2,6 @@
 using System.Windows.Forms;
 using EternalEngine;
 using System.Diagnostics;
-using System.Drawing;
 
 namespace EternalEngineDemo
 {
@@ -35,6 +34,7 @@ namespace EternalEngineDemo
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             foreach (Entity ent in map.Entities)
             {
                 foreach (Line l in ent.Lines)
@@ -47,8 +47,13 @@ namespace EternalEngineDemo
             }
             g.DrawString(ticker.ToString(), new Font(FontFamily.GenericMonospace, 10), Brushes.Black, new PointF(0, 0));
             //g.DrawEllipse(new Pen(Color.Indigo, 2), WorldtoScreen(map.Entities[1].CenterofMass).X - .5f, WorldtoScreen(map.Entities[1].CenterofMass).Y - .5f, 1, 1);
-            RectangleF rf = new RectangleF(WorldtoScreen(map.Entities[0].PhysBox.Location), map.Entities[0].PhysBox.Size);
-            g.DrawRectangle(new Pen(Brushes.Coral, 2f), rf.X, rf.Y, rf.Width, rf.Height);
+            RectangleF r = new RectangleF(WorldtoScreen(map.Entities[0].PhysBox.Location), map.Entities[0].PhysBox.Size);
+            g.DrawRectangle(new Pen(Brushes.Coral, 2f), r.X, r.Y, r.Width, r.Height);
+            //foreach (Vertex v in map.Entities[0].Vertices)
+            //{
+            //    g.DrawEllipse(new Pen(Brushes.Coral, 2), WorldtoScreen(map.Entities[0].Ghost(v)).X - .5f + map.Entities[0].Location.X,
+            //        WorldtoScreen(map.Entities[0].Ghost(v)).Y - .5f + map.Entities[0].Location.Y, 1, 1);
+            //}
         }
 
         public PointF ScreenToWorld(PointF p)
@@ -70,10 +75,11 @@ namespace EternalEngineDemo
         {
             ticker++;
             //Invalidate(new Rectangle(0, 0, 40, 15));
-            phys.CollisionDetection();
             phys.ApplyGravityandAirResistance();
+            phys.CollisionDetection();
             phys.ApplyInertia();
-            //map.Entities[1].Rotate(1);
+            //map.Entities[0].Push(new PointF(0, 0), new SizeF(1, 0));
+            //Debug.Print("ent 0 angularinertia: {0}", map.Entities[0].AngularInertia);
             Invalidate();
         }
 

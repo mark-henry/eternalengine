@@ -12,9 +12,9 @@ namespace EternalEngine
         public Physics(List<Entity> entities)
         {
             m_entities = entities;
-            Gravity = .9f;
-            AirResistance = .95f;
-            ElasticityCoefficient = -4f;
+            Gravity = 1f;
+            AirResistance = .9f;
+            ElasticityCoefficient = -1f;
         }
 
         public float Gravity { get; set; }
@@ -46,17 +46,16 @@ namespace EternalEngine
                         Debug.Print("Physics: PhysBox collision between entity {0} and entity {1}", e, c);
                         //Check Vertex v against each Line l in Entity c
                         PointF intersection;
+                        SizeF translation = new SizeF(ents[e].Location);
                         foreach (Vertex v in ents[e].Vertices)
                         {
                             foreach (Line l in ents[c].Lines)
                             {
-                                intersection = Intersection(v.Location + new SizeF(ents[e].Location),
-                                    v.Location + new SizeF(ents[e].Location) + ents[e].Inertia,
-                                    ents[c].Vertices[l.Index1].Location + ents[c].Inertia,
-                                    ents[c].Vertices[l.Index2].Location + ents[c].Inertia);
+                                intersection = Intersection(v.Location + translation, ents[e].Ghost(v) + translation,
+                                    ents[c].Ghost(l.Index1), ents[c].Ghost(l.Index2));
                                 if (!intersection.IsEmpty)
                                 {
-                                    Debug.WriteLine("Physics: projected collision @ " + intersection);
+                                    ents[e].Push(ents[e].Location - new SizeF(intersection), new SizeF(0,ents[e].Inertia.Height));
                                     ents[e].Inertia = new SizeF(ents[e].Inertia.Width, ents[e].Inertia.Height * ents[e].Material.Elasticity * ElasticityCoefficient);
                                 }
                             }
@@ -70,10 +69,7 @@ namespace EternalEngine
         {
             foreach (Entity e in m_entities)
             {
-                if (e is ActorEntity || e is PropEntity)
-                {
-                    e.Location = e.Location + e.Inertia;
-                }
+                e.ApplyInertia();
             }
         }
 
@@ -103,6 +99,7 @@ namespace EternalEngine
                 Math.Sqrt(Math.Pow(b2.X - retp.X, 2) + Math.Pow(b2.Y - retp.Y, 2))) -
                 Math.Sqrt(Math.Pow(b1.X - b2.X, 2) + Math.Pow(b1.Y - b2.Y, 2))) < .01)
             {
+                Debug.Print("Physics: projected collision @ {0} points: {1} {2} {3} {4}", retp, a1, a2, b1, b2);
                 return retp;
             }
             else { Debug.Print("Physics: Intersection: off of segments: {0} {1} {2} {3}", a1, a2, b1, b2); return new PointF(); }

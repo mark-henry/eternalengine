@@ -14,44 +14,48 @@ namespace EternalEngine
         {
             Lines = new List<Line>();
             Vertices = new List<Vertex>();
-            this.Location = new PointF(0, 0);
+            Location = new PointF(0, 0);
+            AngularInertia = 0;
+            Inertia = new SizeF(0, 0);
         }
-        public Entity(PointF Location)
+        public Entity(PointF location)
         {
             Lines = new List<Line>();
             Vertices = new List<Vertex>();
-            this.Location = Location;
+            Location = location;
+            AngularInertia = 0;
+            Inertia = new SizeF(0, 0);
         }
 
-        public double Mass
+        public virtual float Mass
         {
             get
             {
-                double length = 0;
-                for (int i = 0; i < Lines.Count; i++) { length += LineLength(i); }
-                return length * Material.Density;
+                float area = 0;
+                for (int i = 0; i < Lines.Count; i++) { area += LineLength(i) * Lines[i].Width; }
+                return area * Material.Density;
             }
         }
 
-        public double VertexMass(int index)
+        public float VertexMass(int index)
         {
-            double ret = 0;
+            float ret = 0;
             foreach (Line l in Lines)
             {
-                if (l.Index1 == index || l.Index2 == index) { ret += .5 * LineLength(Lines.IndexOf(l)) * Material.Density; }
+                if (l.Index1 == index || l.Index2 == index) { ret += LineLength(Lines.IndexOf(l)) * l.Width; }
             }
-            return ret;
+            return ret * Material.Density * .5f;
         }
 
-        public double LineLength(int index)
+        public float LineLength(int index)
         {
-            return Math.Sqrt(Math.Pow((Vertices[Lines[index].Index1].Location.X - Vertices[Lines[index].Index2].Location.X), 2)
-                + Math.Pow((Vertices[Lines[index].Index1].Location.Y - Vertices[Lines[index].Index2].Location.Y), 2));
+            return (float)(Math.Sqrt(Math.Pow((Vertices[Lines[index].Index1].Location.X - Vertices[Lines[index].Index2].Location.X), 2)
+                + Math.Pow((Vertices[Lines[index].Index1].Location.Y - Vertices[Lines[index].Index2].Location.Y), 2)));
         }
 
         public void Rotate(double theta)
         {
-            theta *= -Math.PI / 180;
+            //theta *= Math.PI / 180;
             PointF cm = CenterofMass;
             double inittheta;
             double l;
@@ -63,6 +67,42 @@ namespace EternalEngine
             }
         }
 
+        public PointF Ghost(Vertex v)
+        {
+            PointF cm = CenterofMass;
+            double inittheta;
+            double l;
+            inittheta = Math.Atan2(v.Location.Y - cm.Y, v.Location.X - cm.X);
+            l = Math.Sqrt(Math.Pow(v.Location.X - cm.X, 2) + Math.Pow(v.Location.Y - cm.Y, 2));
+            return new PointF(cm.X + (float)(l * Math.Cos(AngularInertia + inittheta)) + Inertia.Width,
+                cm.Y + (float)(l * Math.Sin(AngularInertia + inittheta)) + Inertia.Height);
+        }
+        public PointF Ghost(int index)
+        {
+            return Ghost(Vertices[index]);
+        }
+
+        public void ApplyInertia()
+        {
+            Rotate(AngularInertia);
+            Location = Location + Inertia;
+        }
+
+        public void Push(PointF point, SizeF push)
+        {
+            //Inertia
+
+            
+
+            //Angular Inertia
+            //Thanks to http://hyperphysics.phy-astr.gsu.edu/Hbase/torq2.html
+            PointF cm = CenterofMass;
+            AngularInertia += ((float)(Math.Sqrt(Math.Pow(push.Width, 2) + Math.Pow(push.Height, 2)) *       // F * r * sin(Θ) / moment
+                Math.Sqrt(Math.Pow(point.X - cm.X, 2) + Math.Pow(point.Y - cm.Y, 2)) *
+                Math.Sin(Math.Atan2(push.Height, push.Width) - Math.Atan2(point.Y - cm.Y, point.X - cm.X)))
+                / MomentofInertia);
+        }
+
         /// <summary>
         /// Returns a RectangleF describing where the Entity will be next frame
         /// </summary>
@@ -70,18 +110,29 @@ namespace EternalEngine
         {
             get
             {
-                return new RectangleF(Location.X + Vertices.Min<Vertex>(v => v.Location.X) + Inertia.Width,
-                    Location.Y + Vertices.Min<Vertex>(v => v.Location.Y) + Inertia.Height,
-                    Vertices.Max<Vertex>(v => v.Location.X) - Vertices.Min<Vertex>(v => v.Location.X),
-                    Vertices.Max<Vertex>(v => v.Location.Y) - Vertices.Min<Vertex>(v => v.Location.Y));
+                return new RectangleF(Location.X + Vertices.Min<Vertex>(v => Ghost(v).X),
+                    Location.Y + Vertices.Min<Vertex>(v => Ghost(v).Y),
+                    Vertices.Max<Vertex>(v => Ghost(v).X) - Vertices.Min<Vertex>(v => Ghost(v).X),
+                    Vertices.Max<Vertex>(v => Ghost(v).Y) - Vertices.Min<Vertex>(v => Ghost(v).Y));
             }
         }
 
-        public SizeF Inertia { get; set; }
+        public virtual SizeF Inertia { get; set; }
 
-        public float AngularInertia { get; set; }
+        public virtual float AngularInertia { get; set; }
 
-        public float MomentofInertia { get; set; }
+        public float MomentofInertia
+        {
+            get
+            {
+                float ret = 0;
+                for (int i = 0; i < Vertices.Count; i++)
+                {
+                    ret += VertexMass(i) * (float)(Math.Pow(Vertices[i].Location.X - CenterofMass.X, 2) + Math.Pow(Vertices[i].Location.Y - CenterofMass.Y, 2));
+                }
+                return ret;
+            }
+        }
 
         public PointF Location { get; set; }
 
@@ -130,6 +181,8 @@ namespace EternalEngine
 
         public string ModelName { get; set; }
 
+        public override float AngularInertia { get { return 0f; } set { } }
+
         private Animation m_animation;
         public Animation Animation
         {
@@ -151,6 +204,10 @@ namespace EternalEngine
         public BrushEntity()
         {
         }
+
+        public override SizeF Inertia { get { return new SizeF(0, 0); } set { } }
+        public override float AngularInertia { get { return 0; } set { } }
+        public override float Mass { get { return float.MaxValue; } }
     }
 
     [Serializable]
@@ -159,6 +216,9 @@ namespace EternalEngine
         public SceneryEntity()
         {
         }
+
+        public override SizeF Inertia { get { return new SizeF(0, 0); } set { } }
+        public override float AngularInertia { get { return 0; } set { } }
     }
 
     [Serializable]
