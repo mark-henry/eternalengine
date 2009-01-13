@@ -18,14 +18,16 @@ namespace EternalEngineDemo
 
             map.Entities.Add(new PropEntity());
             map.Entities[0].Lines.Add(new Line(0, 1, Color.Green, 2f));
-            map.Entities[0].Vertices.Add(new Vertex(50, -100));
-            map.Entities[0].Vertices.Add(new Vertex(100, -50));
+            map.Entities[0].Vertices.Add(new Vertex(0, -50));
+            map.Entities[0].Vertices.Add(new Vertex(25, 0));
+            map.Entities[0].Location = new PointF(50, 20);
             map.Entities[0].Material = Material.Steel;
 
             map.Entities.Add(new BrushEntity());
             map.Entities[1].Lines.Add(new Line(0, 1, Color.Firebrick, 2f));
             map.Entities[1].Vertices.Add(new Vertex(0, 0));
             map.Entities[1].Vertices.Add(new Vertex(150, 0));
+            map.Entities[1].Location = new PointF(0, 50);
             map.Entities[1].Material = Material.Steel;
 
             phys = new Physics(map.Entities);
@@ -74,6 +76,7 @@ namespace EternalEngineDemo
         private void timer1_Tick(object sender, System.EventArgs e)
         {
             ticker++;
+            Debug.WriteLine("Frame: " + ticker);
             //Invalidate(new Rectangle(0, 0, 40, 15));
             phys.ApplyGravityandAirResistance();
             phys.CollisionDetection();

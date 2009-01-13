@@ -46,17 +46,27 @@ namespace EternalEngine
                         Debug.Print("Physics: PhysBox collision between entity {0} and entity {1}", e, c);
                         //Check Vertex v against each Line l in Entity c
                         PointF intersection;
-                        SizeF translation = new SizeF(ents[e].Location);
+                        SizeF translationE = new SizeF(ents[e].Location);
+                        SizeF translationC = new SizeF(ents[c].Location);
                         foreach (Vertex v in ents[e].Vertices)
                         {
                             foreach (Line l in ents[c].Lines)
                             {
-                                intersection = Intersection(v.Location + translation, ents[e].Ghost(v) + translation,
-                                    ents[c].Ghost(l.Index1), ents[c].Ghost(l.Index2));
+                                intersection = Intersection(v.Location + translationE, ents[e].Ghost(v) + translationE,
+                                    ents[c].Ghost(l.Index1) + translationC, ents[c].Ghost(l.Index2) + translationC);
                                 if (!intersection.IsEmpty)
                                 {
-                                    ents[e].Push(ents[e].Location - new SizeF(intersection), new SizeF(0,ents[e].Inertia.Height));
-                                    ents[e].Inertia = new SizeF(ents[e].Inertia.Width, ents[e].Inertia.Height * ents[e].Material.Elasticity * ElasticityCoefficient);
+                                    SizeF ev = new SizeF(ents[e].Ghost(v).X - v.Location.X, ents[e].Ghost(v).Y - v.Location.Y);
+                                    SizeF cv = new SizeF(ents[c].Ghost(v).X - v.Location.X, ents[c].Ghost(v).Y - v.Location.Y);
+
+                                    ents[e].Push(intersection - translationE,
+                                        new SizeF(ev.Width, ElasticityCoefficient * ents[e].Material.Elasticity * ev.Height));
+                                    //ents[c].Push(ents[c].Location - new SizeF(intersection),
+                                    //    new SizeF(ev.Width * (ents[e].Mass / ents[c].Mass), ev.Height * (ents[c].Mass / ents[e].Mass)));
+
+                                    //ents[e].Push(ents[e].Location - new SizeF(intersection), new SizeF(0, 1));
+                                    //ents[e].Inertia = new SizeF(ents[e].Inertia.Width, 
+                                    //    ents[e].Inertia.Height * ents[e].Material.Elasticity * ElasticityCoefficient);
                                 }
                             }
                         }
@@ -83,10 +93,10 @@ namespace EternalEngine
             {
                 if (num1 == 0 && num2 == 0)
                 {
-                    Debug.Print("Physics: Intersection: coincident (num1, num2, denom == 0): {0} {1} {2} {3}", a1, a2, b1, b2);
+                    //Debug.Print("Physics: Intersection: coincident (num1, num2, denom == 0): {0} {1} {2} {3}", a1, a2, b1, b2);
                     return new PointF((a1.X + a2.X) / 2, (a1.Y + a2.Y) / 2);
                 }
-                Debug.Print("Physics: Intersection: none (denom == 0): {0} {1} {2} {3}", a1, a2, b1, b2);
+                //Debug.Print("Physics: Intersection: none (denom == 0): {0} {1} {2} {3}", a1, a2, b1, b2);
                 return new PointF();
             }
 
@@ -99,10 +109,15 @@ namespace EternalEngine
                 Math.Sqrt(Math.Pow(b2.X - retp.X, 2) + Math.Pow(b2.Y - retp.Y, 2))) -
                 Math.Sqrt(Math.Pow(b1.X - b2.X, 2) + Math.Pow(b1.Y - b2.Y, 2))) < .01)
             {
-                Debug.Print("Physics: projected collision @ {0} points: {1} {2} {3} {4}", retp, a1, a2, b1, b2);
+                //Debug.Print("Physics: projected collision @ {0} points: {1} {2} {3} {4}", retp, a1, a2, b1, b2);
+                Debug.WriteLine("Physics: projected collision @ " + retp);
                 return retp;
             }
-            else { Debug.Print("Physics: Intersection: off of segments: {0} {1} {2} {3}", a1, a2, b1, b2); return new PointF(); }
+            else
+            { 
+                //Debug.Print("Physics: Intersection: off of segments: {0} {1} {2} {3}", a1, a2, b1, b2);
+                return new PointF();
+            }
         }
 
         //public PointF Intersection(PointF a1, PointF a2, PointF b1, PointF b2)
