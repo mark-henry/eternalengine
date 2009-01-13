@@ -90,17 +90,16 @@ namespace EternalEngine
 
         public void Push(PointF point, SizeF push)
         {
+            PointF cm = CenterofMass;
+            float leverarm = Math.Abs((float)(Math.Sqrt(Math.Pow(point.X - cm.X, 2) + Math.Pow(point.Y - cm.Y, 2)) *  // r * sin(Θ)
+                Math.Sin(Math.Atan2(push.Height, push.Width) - Math.Atan2(point.Y - cm.Y, point.X - cm.X))));
+                
             //Inertia
-
-            
+            Inertia += new SizeF(push.Width / (Mass * leverarm), push.Height / (Mass * leverarm));
 
             //Angular Inertia
             //Thanks to http://hyperphysics.phy-astr.gsu.edu/Hbase/torq2.html
-            PointF cm = CenterofMass;
-            AngularInertia += ((float)(Math.Sqrt(Math.Pow(push.Width, 2) + Math.Pow(push.Height, 2)) *       // F * r * sin(Θ) / moment
-                Math.Sqrt(Math.Pow(point.X - cm.X, 2) + Math.Pow(point.Y - cm.Y, 2)) *
-                Math.Sin(Math.Atan2(push.Height, push.Width) - Math.Atan2(point.Y - cm.Y, point.X - cm.X)))
-                / MomentofInertia);
+            AngularInertia += ((float)Math.Sqrt(Math.Pow(push.Width, 2) + Math.Pow(push.Height, 2)) * leverarm) / MomentofInertia; // F * lever arm length
         }
 
         /// <summary>
