@@ -38,7 +38,7 @@ namespace EternalEngine
                 try {
                     percent = (((float)CurrentFrame - (float)PreviousFrame) / ((float)NextFrame - (float)PreviousFrame));
                     if (CurrentFrame == 0) { percent = 0; }
-                    if (CurrentFrame == NumberofFrames) { percent = 100; }
+                    if (CurrentFrame == NumberofFrames) { percent = 1; }
                 }
                 catch (DivideByZeroException)
                 {
@@ -92,7 +92,7 @@ namespace EternalEngine
             {
                 int final = CurrentFrame;
                 bool success = false;
-                for (int i = NumberofFrames; i >= CurrentFrame; i--)
+                for (int i = NumberofFrames; i > CurrentFrame; i--)
                 {
                     if (Keyframes.ContainsKey(i))
                     {

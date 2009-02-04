@@ -11,6 +11,7 @@ namespace EternalEngineDemo
         private Map map = new Map();
         private int ticker = 0;
         private Physics phys;
+        private GUI gui = new GUI();
 
         public Form1()
         {
@@ -47,7 +48,7 @@ namespace EternalEngineDemo
                     //Debug.WriteLine(WorldtoScreen(ent.Vertices[l.Index1].Location).ToString() + "\n" + WorldtoScreen(ent.Vertices[l.Index2].Location).ToString());
                 }
             }
-            g.DrawString(ticker.ToString(), new Font(FontFamily.GenericMonospace, 10), Brushes.Black, new PointF(0, 0));
+            g.DrawString(ticker.ToString(), new Font(FontFamily.GenericMonospace, 10), Brushes.Black, this.Width - 50, this.Height - 50); 
             //g.DrawEllipse(new Pen(Color.Indigo, 2), WorldtoScreen(map.Entities[1].CenterofMass).X - .5f, WorldtoScreen(map.Entities[1].CenterofMass).Y - .5f, 1, 1);
             RectangleF r = new RectangleF(WorldtoScreen(map.Entities[0].PhysBox.Location), map.Entities[0].PhysBox.Size);
             g.DrawRectangle(new Pen(Brushes.Coral, 2f), r.X, r.Y, r.Width, r.Height);
@@ -56,6 +57,7 @@ namespace EternalEngineDemo
             //    g.DrawEllipse(new Pen(Brushes.Coral, 2), WorldtoScreen(map.Entities[0].Ghost(v)).X - .5f + map.Entities[0].Location.X,
             //        WorldtoScreen(map.Entities[0].Ghost(v)).Y - .5f + map.Entities[0].Location.Y, 1, 1);
             //}
+            gui.Refresh(g);
         }
 
         public PointF ScreenToWorld(PointF p)
@@ -78,6 +80,10 @@ namespace EternalEngineDemo
             ticker++;
             Debug.WriteLine("Frame: " + ticker);
             //Invalidate(new Rectangle(0, 0, 40, 15));
+            foreach (ActorEntity ae in phys.Entities.FindAll(ee => ee is ActorEntity))
+            {
+                ae.Animation.GoTo(ae.Vertices, ae.Animation.CurrentFrame + 1);
+            }
             phys.ApplyGravityandAirResistance();
             phys.CollisionDetection();
             phys.ApplyInertia();
