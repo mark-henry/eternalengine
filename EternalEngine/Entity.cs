@@ -95,7 +95,6 @@ namespace EternalEngine
                 Math.Sin(Math.Atan2(push.Height, push.Width) - Math.Atan2(point.Y - cm.Y, point.X - cm.X))));
                 
             //Inertia
-            Inertia += new SizeF(push.Width / (Mass * leverarm), push.Height / (Mass * leverarm));
 
             //Angular Inertia
             //Thanks to http://hyperphysics.phy-astr.gsu.edu/Hbase/torq2.html
@@ -194,6 +193,11 @@ namespace EternalEngine
                 }
                 m_animation = value;
             }
+        }
+
+        public void ClearAnimation()
+        {
+            m_animation = null;
         }
     }
 

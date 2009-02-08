@@ -11,7 +11,7 @@ namespace EternalEngineDemo
         private Map map = new Map();
         private int ticker = 0;
         private Physics phys;
-        private GUI gui = new GUI();
+        private GUI gui;
 
         public Form1()
         {
@@ -32,6 +32,8 @@ namespace EternalEngineDemo
             map.Entities[1].Material = Material.Steel;
 
             phys = new Physics(map.Entities);
+
+            gui = new GUI(this.ClientSize);
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
@@ -48,7 +50,6 @@ namespace EternalEngineDemo
                     //Debug.WriteLine(WorldtoScreen(ent.Vertices[l.Index1].Location).ToString() + "\n" + WorldtoScreen(ent.Vertices[l.Index2].Location).ToString());
                 }
             }
-            g.DrawString(ticker.ToString(), new Font(FontFamily.GenericMonospace, 10), Brushes.Black, this.Width - 50, this.Height - 50); 
             //g.DrawEllipse(new Pen(Color.Indigo, 2), WorldtoScreen(map.Entities[1].CenterofMass).X - .5f, WorldtoScreen(map.Entities[1].CenterofMass).Y - .5f, 1, 1);
             RectangleF r = new RectangleF(WorldtoScreen(map.Entities[0].PhysBox.Location), map.Entities[0].PhysBox.Size);
             g.DrawRectangle(new Pen(Brushes.Coral, 2f), r.X, r.Y, r.Width, r.Height);
@@ -57,21 +58,23 @@ namespace EternalEngineDemo
             //    g.DrawEllipse(new Pen(Brushes.Coral, 2), WorldtoScreen(map.Entities[0].Ghost(v)).X - .5f + map.Entities[0].Location.X,
             //        WorldtoScreen(map.Entities[0].Ghost(v)).Y - .5f + map.Entities[0].Location.Y, 1, 1);
             //}
-            gui.Refresh(g);
+            //g.FillRegion(Brushes.Purple, gui.GetGUIBounds());
+            g.DrawString(ticker.ToString(), new Font(FontFamily.GenericMonospace, 10), Brushes.Black, this.Width - 50, this.Height - 50);
+            gui.Draw(g);
         }
 
         public PointF ScreenToWorld(PointF p)
         {
             PointF retp = new PointF(p.X, p.Y);
-            retp.X = p.X + cam.Location.X - (this.Width / 2);
-            retp.Y = p.Y + cam.Location.Y - (this.Height / 2);
+            retp.X = p.X + cam.Location.X - (this.ClientSize.Width / 2);
+            retp.Y = p.Y + cam.Location.Y - (this.ClientSize.Height / 2);
             return retp;
         }
         public PointF WorldtoScreen(PointF p)
         {
             PointF retp = new PointF(p.X, p.Y);
-            retp.X = p.X - cam.Location.X + (this.Width / 2);
-            retp.Y = p.Y - cam.Location.Y + (this.Height / 2);
+            retp.X = p.X - cam.Location.X + (this.ClientSize.Width / 2);
+            retp.Y = p.Y - cam.Location.Y + (this.ClientSize.Height / 2);
             return retp;
         }
 
@@ -89,7 +92,9 @@ namespace EternalEngineDemo
             phys.ApplyInertia();
             //map.Entities[0].Push(new PointF(0, 0), new SizeF(1, 0));
             //Debug.Print("ent 0 angularinertia: {0}", map.Entities[0].AngularInertia);
-            Invalidate();
+            Region r = new Region();
+            r.Exclude(gui.GetGUIBounds());
+            Invalidate(r);
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -105,7 +110,22 @@ namespace EternalEngineDemo
                 case Keys.D2:
                     timer1.Interval = 1000;
                     break;
+                case Keys.Escape:
+                    gui.Pause();
+                    timer1.Enabled = false;
+                    break;
             }
+        }
+
+        private void GUI_UnPause(object sender, System.EventArgs e)
+        {
+            timer1.Enabled = true;
+        }
+
+        private void Form1_Resize(object sender, System.EventArgs e)
+        {
+            gui.ClientSize = this.ClientSize;
+            Invalidate(gui.GetGUIBounds());
         }
     }
 }
