@@ -13,7 +13,7 @@ namespace EternalEngine
       {
          m_entities = entities;
          Gravity = 1f;
-         AirResistance = .93f;
+         AirResistance = .99f;
          ElasticityCoefficient = -1f;
       }
 
@@ -75,7 +75,7 @@ namespace EternalEngine
                            ents[e].Push(intersection - translationE,
                                new SizeF(tan.Width - inc.Width - (float)Math.Cos(Friction), inc.Height - tan.Height + (float)Math.Sin(Friction)));
 
-                           //Debug.WriteLine(new SizeF(inc.Width - tan.Width, tan.Height - inc.Height));
+                           Debug.WriteLine("Physics: Push: " + new SizeF(inc.Width - tan.Width, tan.Height - inc.Height).ToString());
                         }
                      }
                   }
