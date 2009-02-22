@@ -50,7 +50,8 @@
     <Compile Include="Animation.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Entity.cs" />
-    <Compile Include="GUI.cs" />
+    <Compile Include="GUI.cs">
+    </Compile>
     <Compile Include="Keyframe.cs" />
     <Compile Include="Line.cs" />
     <Compile Include="Map.cs" />
