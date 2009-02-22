@@ -27,7 +27,7 @@ namespace EternalEngineDemo
 
             map.Entities.Add(new BrushEntity());
             map.Entities[1].Lines.Add(new Line(0, 1, Color.Firebrick, 2f));
-            map.Entities[1].Vertices.Add(new Vertex(0, 0));
+            map.Entities[1].Vertices.Add(new Vertex(-100, 0));
             map.Entities[1].Vertices.Add(new Vertex(150, 0));
             map.Entities[1].Location = new PointF(0, 50);
             map.Entities[1].Material = Material.Steel;
