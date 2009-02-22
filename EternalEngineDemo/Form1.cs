@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using EternalEngine;
 using System.Diagnostics;
+using System;
 
 namespace EternalEngineDemo
 {
@@ -34,33 +35,40 @@ namespace EternalEngineDemo
             phys = new Physics(map.Entities);
 
             gui = new GUI(this.ClientSize);
+            gui.UnPause += new EventHandler(this.GUI_UnPause);
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            foreach (Entity ent in map.Entities)
+            if (gui.IsPaused)
+            { }
+            else
             {
-                foreach (Line l in ent.Lines)
+                foreach (Entity ent in map.Entities)
                 {
-                    g.DrawLine(new Pen(l.Color, l.Width),
-                        WorldtoScreen(new PointF(ent.Vertices[l.Index1].Location.X + ent.Location.X, ent.Vertices[l.Index1].Location.Y + ent.Location.Y)),
-                        WorldtoScreen(new PointF(ent.Vertices[l.Index2].Location.X + ent.Location.X, ent.Vertices[l.Index2].Location.Y + ent.Location.Y)));
-                    //Debug.WriteLine(WorldtoScreen(ent.Vertices[l.Index1].Location).ToString() + "\n" + WorldtoScreen(ent.Vertices[l.Index2].Location).ToString());
+                    foreach (Line l in ent.Lines)
+                    {
+                        g.DrawLine(new Pen(l.Color, l.Width),
+                            WorldtoScreen(new PointF(ent.Vertices[l.Index1].Location.X + ent.Location.X, ent.Vertices[l.Index1].Location.Y + ent.Location.Y)),
+                            WorldtoScreen(new PointF(ent.Vertices[l.Index2].Location.X + ent.Location.X, ent.Vertices[l.Index2].Location.Y + ent.Location.Y)));
+                        //Debug.WriteLine(WorldtoScreen(ent.Vertices[l.Index1].Location).ToString() + "\n" + WorldtoScreen(ent.Vertices[l.Index2].Location).ToString());
+                    }
                 }
+                //g.DrawEllipse(new Pen(Color.Indigo, 2), WorldtoScreen(map.Entities[0].CenterofMass).X - .5f + map.Entities[0].Location.X,
+                //    WorldtoScreen(map.Entities[0].CenterofMass).Y - .5f + map.Entities[0].Location.Y, 1, 1);
+                RectangleF r = new RectangleF(WorldtoScreen(map.Entities[0].PhysBox.Location), map.Entities[0].PhysBox.Size);
+                g.DrawRectangle(new Pen(Brushes.Coral, 2f), r.X, r.Y, r.Width, r.Height);
+                //foreach (Vertex v in map.Entities[0].Vertices)
+                //{
+                //    g.DrawEllipse(new Pen(Brushes.Coral, 2), WorldtoScreen(map.Entities[0].Ghost(v)).X - .5f + map.Entities[0].Location.X,
+                //        WorldtoScreen(map.Entities[0].Ghost(v)).Y - .5f + map.Entities[0].Location.Y, 1, 1);
+                //}
             }
-            //g.DrawEllipse(new Pen(Color.Indigo, 2), WorldtoScreen(map.Entities[1].CenterofMass).X - .5f, WorldtoScreen(map.Entities[1].CenterofMass).Y - .5f, 1, 1);
-            RectangleF r = new RectangleF(WorldtoScreen(map.Entities[0].PhysBox.Location), map.Entities[0].PhysBox.Size);
-            g.DrawRectangle(new Pen(Brushes.Coral, 2f), r.X, r.Y, r.Width, r.Height);
-            //foreach (Vertex v in map.Entities[0].Vertices)
-            //{
-            //    g.DrawEllipse(new Pen(Brushes.Coral, 2), WorldtoScreen(map.Entities[0].Ghost(v)).X - .5f + map.Entities[0].Location.X,
-            //        WorldtoScreen(map.Entities[0].Ghost(v)).Y - .5f + map.Entities[0].Location.Y, 1, 1);
-            //}
-            //g.FillRegion(Brushes.Purple, gui.GetGUIBounds());
-            g.DrawString(ticker.ToString(), new Font(FontFamily.GenericMonospace, 10), Brushes.Black, this.Width - 50, this.Height - 50);
             gui.Draw(g);
+            //g.FillRegion(Brushes.Purple, gui.GetInvalidatedRegion());
+            g.DrawString(ticker.ToString(), new Font(FontFamily.GenericMonospace, 10), Brushes.Gray, this.Width - 50, this.Height - 50);
         }
 
         public PointF ScreenToWorld(PointF p)
@@ -89,11 +97,12 @@ namespace EternalEngineDemo
             }
             phys.ApplyGravityandAirResistance();
             phys.CollisionDetection();
+            //phys.Entities[0].Push(phys.Entities[0].CenterofMass + new SizeF(5,-5), new SizeF(.01f, .01f));
             phys.ApplyInertia();
             //map.Entities[0].Push(new PointF(0, 0), new SizeF(1, 0));
             //Debug.Print("ent 0 angularinertia: {0}", map.Entities[0].AngularInertia);
             Region r = new Region();
-            r.Exclude(gui.GetGUIBounds());
+            r.Exclude(gui.GetInvalidatedRegion());
             Invalidate(r);
         }
 
@@ -111,8 +120,8 @@ namespace EternalEngineDemo
                     timer1.Interval = 1000;
                     break;
                 case Keys.Escape:
-                    gui.Pause();
-                    timer1.Enabled = false;
+                    timer1.Enabled = !gui.PauseToggle();
+                    Invalidate(gui.GetInvalidatedRegion());
                     break;
             }
         }
@@ -125,7 +134,19 @@ namespace EternalEngineDemo
         private void Form1_Resize(object sender, System.EventArgs e)
         {
             gui.ClientSize = this.ClientSize;
-            Invalidate(gui.GetGUIBounds());
+            Invalidate(gui.GetInvalidatedRegion());
+        }
+
+        private void Form1_MouseClick(object sender, MouseEventArgs e)
+        {
+            gui.OnClick(sender, e.Location, (int)e.Button);
+            Invalidate(gui.GetInvalidatedRegion());
+        }
+
+        private void Form1_MouseMove(object sender, MouseEventArgs e)
+        {
+            gui.MouseMove(e.Location);
+            Invalidate(gui.GetInvalidatedRegion());
         }
     }
 }
