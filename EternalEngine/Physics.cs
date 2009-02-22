@@ -14,7 +14,7 @@ namespace EternalEngine
          m_entities = entities;
          Gravity = 1f;
          AirResistance = .99f;
-         ElasticityCoefficient = -1f;
+         ElasticityCoefficient = .95f;
       }
 
       public float Gravity { get; set; }
@@ -48,6 +48,8 @@ namespace EternalEngine
                   PointF intersection;
                   SizeF translationE = new SizeF(ents[e].Location);
                   SizeF translationC = new SizeF(ents[c].Location);
+                  float elasticity = ents[e].Material.Elasticity * ents[c].Material.Elasticity * ElasticityCoefficient;
+                  Debug.WriteLine("Physics: Elasticity: " + elasticity);
                   foreach (Vertex v in ents[e].Vertices)
                   {
                      foreach (Line l in ents[c].Lines)
@@ -70,10 +72,10 @@ namespace EternalEngine
                            SizeF tan = new SizeF((float)(tanmag * Math.Cos(((3 * Math.PI) / 2) - thetatan)),
                               (float)(tanmag * Math.Sin(((3 * Math.PI) / 2) - thetatan)));
 
-                           ents[c].Push(intersection - translationC,
-                               new SizeF(inc.Width - tan.Width + (float)Math.Cos(Friction), tan.Height - inc.Height - (float)Math.Sin(Friction)));
-                           ents[e].Push(intersection - translationE,
-                               new SizeF(tan.Width - inc.Width - (float)Math.Cos(Friction), inc.Height - tan.Height + (float)Math.Sin(Friction)));
+                           SizeF push = new SizeF(elasticity * (inc.Width - tan.Width + (float)Math.Cos(Friction)), elasticity * (tan.Height - inc.Height - (float)Math.Sin(Friction)));
+
+                           ents[e].Push(intersection, push);
+                           ents[c].Push(intersection, new SizeF(-push.Height, -push.Width));
 
                            Debug.WriteLine("Physics: Push: " + new SizeF(inc.Width - tan.Width, tan.Height - inc.Height).ToString());
                         }
