@@ -38,34 +38,34 @@ namespace EternalEngine
 
         public void Draw(Graphics g)
         {
-            if (IsPaused)
-            {
-                g.FillRegion(Brushes.Black, new Region());
+            //if (IsPaused)
+            //{
+            //    g.FillRegion(Brushes.Black, new Region());
 
-                g.DrawString(CurrentMenuItem.Text, ftitle, Brushes.White, MenuItem.LeftMargin, MenuItem.TopMargin);
-                for (int i = 0; i <= CurrentMenuItem.Children.Count; i++)
-                {
-                    if (i == CurrentMenuItem.Children.Count)
-                    {
-                        g.DrawString("Back", fsmall, Brushes.White, MenuItem.LeftMargin + MenuItem.TabStop,
-                            i * MenuItem.VerticalInterval + MenuItem.TopMargin + MenuItem.TitleOffset);
-                        break;
-                    }
-                    g.DrawString(CurrentMenuItem.Children[i].Text, fsmall, Brushes.White, MenuItem.LeftMargin + MenuItem.TabStop,
-                        i * MenuItem.VerticalInterval + MenuItem.TopMargin + MenuItem.TitleOffset);
-                }
-                g.DrawString(CurrentMenuItem.Children[m_selectedMenuIndex].Text, fsmall, Brushes.Yellow,
-                    MenuItem.LeftMargin + MenuItem.TabStop, MenuItem.TopMargin + MenuItem.TitleOffset + MenuItem.VerticalInterval * m_selectedMenuIndex);
-            }
-            else
-            {
-                //Stamina bar
-                string s = "Stamina";
-                Font f = new Font(FontFamily.GenericSerif, 10, FontStyle.Bold);
-                float w = g.MeasureString(s, f).Width;
-                g.DrawLine(new Pen(Brushes.Red, 5f), w, 7, Stamina * (ClientSize.Width - w), 7);
-                g.DrawString(s, f, Brushes.Red, 0f, 0f);
-            }
+            //    g.DrawString(CurrentMenuItem.Text, ftitle, Brushes.White, MenuItem.LeftMargin, MenuItem.TopMargin);
+            //    for (int i = 0; i <= CurrentMenuItem.Children.Count; i++)
+            //    {
+            //        if (i == CurrentMenuItem.Children.Count)
+            //        {
+            //            g.DrawString("Back", fsmall, Brushes.White, MenuItem.LeftMargin + MenuItem.TabStop,
+            //                i * MenuItem.VerticalInterval + MenuItem.TopMargin + MenuItem.TitleOffset);
+            //            break;
+            //        }
+            //        g.DrawString(CurrentMenuItem.Children[i].Text, fsmall, Brushes.White, MenuItem.LeftMargin + MenuItem.TabStop,
+            //            i * MenuItem.VerticalInterval + MenuItem.TopMargin + MenuItem.TitleOffset);
+            //    }
+            //    g.DrawString(CurrentMenuItem.Children[m_selectedMenuIndex].Text, fsmall, Brushes.Yellow,
+            //        MenuItem.LeftMargin + MenuItem.TabStop, MenuItem.TopMargin + MenuItem.TitleOffset + MenuItem.VerticalInterval * m_selectedMenuIndex);
+            //}
+            //else
+            //{
+            //    //Stamina bar
+            //    string s = "Stamina";
+            //    Font f = new Font(FontFamily.GenericSerif, 10, FontStyle.Bold);
+            //    float w = g.MeasureString(s, f).Width;
+            //    g.DrawLine(new Pen(Brushes.Red, 5f), w, 7, Stamina * (ClientSize.Width - w), 7);
+            //    g.DrawString(s, f, Brushes.Red, 0f, 0f);
+            //}
         }
 
         public void OnClick(object sender, Point click, int mousebutton)
@@ -80,7 +80,6 @@ namespace EternalEngine
                     case 2097152: //Right-click
                         break;
                 }
-
             }
         }
 

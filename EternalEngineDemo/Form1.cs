@@ -18,20 +18,36 @@ namespace EternalEngineDemo
       {
          InitializeComponent();
 
-         #region entities
-         //map.Entities.Add(new PropEntity());
-         //map.Entities[0].Lines.Add(new Line(0, 1, Color.Green, 2f));
-         //map.Entities[0].Vertices.Add(new Vertex(0, -50));
-         //map.Entities[0].Vertices.Add(new Vertex(25, 0));
-         //map.Entities[0].Location = new PointF(50, 20);
-         //map.Entities[0].Material = Material.Steel;
+         InitializeEnts1();
 
-         //map.Entities.Add(new BrushEntity());
-         //map.Entities[1].Lines.Add(new Line(0, 1, Color.Firebrick, 2f));
-         //map.Entities[1].Vertices.Add(new Vertex(-100, 0));
-         //map.Entities[1].Vertices.Add(new Vertex(150, 0));
-         //map.Entities[1].Location = new PointF(0, 50);
-         //map.Entities[1].Material = Material.Steel;
+         phys = new Physics(map.Entities);
+
+         gui = new GUI(this.ClientSize);
+         gui.UnPause += new EventHandler(this.GUI_UnPause);
+      }
+
+      private void InitializeEnts1()
+      {
+         map.Entities.Clear();
+
+         map.Entities.Add(new PropEntity());
+         map.Entities[0].Lines.Add(new Line(0, 1, Color.Green, 2f));
+         map.Entities[0].Vertices.Add(new Vertex(0, -50));
+         map.Entities[0].Vertices.Add(new Vertex(25, 0));
+         map.Entities[0].Location = new PointF(50, 20);
+         map.Entities[0].Material = Material.Steel;
+
+         map.Entities.Add(new BrushEntity());
+         map.Entities[1].Lines.Add(new Line(0, 1, Color.Firebrick, 2f));
+         map.Entities[1].Vertices.Add(new Vertex(-100, 0));
+         map.Entities[1].Vertices.Add(new Vertex(150, 0));
+         map.Entities[1].Location = new PointF(0, 50);
+         map.Entities[1].Material = Material.Steel;
+      }
+
+      private void InitializeEnts2()
+      {
+         map.Entities.Clear();
 
          map.Entities.Add(new BrushEntity());
          map.Entities[0].Lines.Add(new Line(0, 1, Color.Firebrick, 2f));
@@ -51,14 +67,8 @@ namespace EternalEngineDemo
          map.Entities[1].Vertices.Add(new Vertex(0, 50));
          map.Entities[1].Location = new Point(-100, 0);
          map.Entities[1].Material = Material.Steel;
-         map.Entities[1].Inertia = new SizeF(10, -10);
-         map.Entities[1].AngularInertia = .1f;
-         #endregion
-
-         phys = new Physics(map.Entities);
-
-         gui = new GUI(this.ClientSize);
-         gui.UnPause += new EventHandler(this.GUI_UnPause);
+         map.Entities[1].Velocity = new SizeF(10, -10);
+         map.Entities[1].AngularVelocity = .1f;
       }
 
       private void Form1_Paint(object sender, PaintEventArgs e)
@@ -81,8 +91,10 @@ namespace EternalEngineDemo
             }
             //g.DrawEllipse(new Pen(Color.Indigo, 2), WorldtoScreen(map.Entities[0].CenterofMass).X - .5f + map.Entities[0].Location.X,
             //    WorldtoScreen(map.Entities[0].CenterofMass).Y - .5f + map.Entities[0].Location.Y, 1, 1);
-            RectangleF r = new RectangleF(WorldtoScreen(map.Entities[1].PhysBox.Location), map.Entities[1].PhysBox.Size);
+            RectangleF r = new RectangleF(WorldtoScreen(map.Entities[0].PhysBox.Location), map.Entities[0].PhysBox.Size);
+            RectangleF r2 = new RectangleF(WorldtoScreen(map.Entities[1].PhysBox.Location), map.Entities[1].PhysBox.Size);
             g.DrawRectangle(new Pen(Brushes.Coral, 2f), r.X, r.Y, r.Width, r.Height);
+            g.DrawRectangle(new Pen(Brushes.Coral, 2f), r2.X, r2.Y, r2.Width, r2.Height);
             //foreach (Vertex v in map.Entities[0].Vertices)
             //{
             //    g.DrawEllipse(new Pen(Brushes.Coral, 2), WorldtoScreen(map.Entities[0].Ghost(v)).X - .5f + map.Entities[0].Location.X,
@@ -94,14 +106,14 @@ namespace EternalEngineDemo
          g.DrawString(ticker.ToString(), new Font(FontFamily.GenericMonospace, 10), Brushes.Gray, this.Width - 50, this.Height - 50);
       }
 
-      public PointF ScreenToWorld(PointF p)
+      PointF ScreenToWorld(PointF p)
       {
          PointF retp = new PointF(p.X, p.Y);
          retp.X = p.X + cam.Location.X - (this.ClientSize.Width / 2);
          retp.Y = p.Y + cam.Location.Y - (this.ClientSize.Height / 2);
          return retp;
       }
-      public PointF WorldtoScreen(PointF p)
+      PointF WorldtoScreen(PointF p)
       {
          PointF retp = new PointF(p.X, p.Y);
          retp.X = p.X - cam.Location.X + (this.ClientSize.Width / 2);
@@ -121,9 +133,8 @@ namespace EternalEngineDemo
          phys.ApplyGravityandAirResistance();
          phys.CollisionDetection();
          //phys.Entities[0].Push(phys.Entities[0].CenterofMass + new SizeF(5,-5), new SizeF(.01f, .01f));
-         phys.ApplyInertia();
+         phys.ApplyVelocities();
          //map.Entities[0].Push(new PointF(0, 0), new SizeF(1, 0));
-         //Debug.Print("ent 0 angularinertia: {0}", map.Entities[0].AngularInertia);
          Region r = new Region();
          r.Exclude(gui.GetInvalidatedRegion());
          Invalidate(r);
@@ -141,6 +152,21 @@ namespace EternalEngineDemo
                break;
             case Keys.D2:
                timer1.Interval = 1000;
+               break;
+            case Keys.F1:
+               InitializeEnts1();
+               Invalidate();
+               break;
+            case Keys.F2:
+               InitializeEnts2();
+               Invalidate();
+               break;
+            case Keys.S:
+               timer1.Enabled = false;
+               timer1_Tick(this, new EventArgs());
+               break;
+            case Keys.Q:
+               Application.Exit();
                break;
             case Keys.Escape:
                timer1.Enabled = !gui.PauseToggle();
