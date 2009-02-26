@@ -16,7 +16,6 @@ namespace EternalEngine
             NumberofFrames = 100;
             CurrentFrame = 0;
         }
-
         public Animation(FileStream file)
         {
             CurrentFrame = 0;

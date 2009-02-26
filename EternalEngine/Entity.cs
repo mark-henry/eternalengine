@@ -9,14 +9,7 @@ namespace EternalEngine
    [Serializable]
    public abstract class Entity
    {
-      public Entity()
-      {
-         Lines = new List<Line>();
-         Vertices = new List<Vertex>();
-         Location = new PointF(0, 0);
-         AngularVelocity = 0;
-         Velocity = new SizeF(0, 0);
-      }
+      public Entity() : this(new PointF(0, 0)) { }
       public Entity(PointF location)
       {
          Lines = new List<Line>();
@@ -106,8 +99,8 @@ namespace EternalEngine
 
          //Angular Velocity
          //Thanks to http://hyperphysics.phy-astr.gsu.edu/Hbase/torq2.html
-         float leverarm = Math.Abs((float)(Math.Sqrt(Math.Pow(point.X - cm.X, 2) + Math.Pow(point.Y - cm.Y, 2)) * Math.Sin(theta))); // r * sin(Θ)
-         AngularVelocity -= ((float)Math.Sqrt(Math.Pow(push.Width, 2) + Math.Pow(push.Height, 2)) * leverarm) / (MomentofInertia * 10); // F * lever arm length
+         float leverarm = (float)(Math.Sqrt(Math.Pow(point.X - cm.X, 2) + Math.Pow(point.Y - cm.Y, 2)) * Math.Sin(theta)); // r * sin(Θ)
+         AngularVelocity += ((float)Math.Sqrt(Math.Pow(push.Width, 2) + Math.Pow(push.Height, 2)) * leverarm) / (MomentofInertia * 20); // F * lever arm length
 
          //Debug.WriteLine(" for " + this.Velocity);
       }

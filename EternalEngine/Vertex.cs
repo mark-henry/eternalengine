@@ -10,11 +10,7 @@ namespace EternalEngine
         {
             this.Location = Location;
         }
-
-        public Vertex(float X, float Y)
-        {
-            this.Location = new PointF(X, Y);
-        }
+        public Vertex(float X, float Y) : this(new PointF(X, Y)) { }
 
         private PointF m_location;
         /// <summary>
