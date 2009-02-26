@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Diagnostics;
-using System.Collections;
+using System.Drawing;
 using System.Linq;
 
 namespace EternalEngine
@@ -15,16 +14,16 @@ namespace EternalEngine
          Lines = new List<Line>();
          Vertices = new List<Vertex>();
          Location = new PointF(0, 0);
-         AngularInertia = 0;
-         Inertia = new SizeF(0, 0);
+         AngularVelocity = 0;
+         Velocity = new SizeF(0, 0);
       }
       public Entity(PointF location)
       {
          Lines = new List<Line>();
          Vertices = new List<Vertex>();
          Location = location;
-         AngularInertia = 0;
-         Inertia = new SizeF(0, 0);
+         AngularVelocity = 0;
+         Velocity = new SizeF(0, 0);
       }
 
       public virtual float Mass
@@ -37,6 +36,8 @@ namespace EternalEngine
          }
       }
 
+
+      /// <returns>Returns mass in specks</returns>
       public float VertexMass(int index)
       {
          float ret = 0;
@@ -47,12 +48,15 @@ namespace EternalEngine
          return ret * Material.Density * .5f;
       }
 
+
+      /// <returns>Returns length in pixels</returns>
       public float LineLength(int index)
       {
          return (float)(Math.Sqrt(Math.Pow((Vertices[Lines[index].Index1].Location.X - Vertices[Lines[index].Index2].Location.X), 2)
              + Math.Pow((Vertices[Lines[index].Index1].Location.Y - Vertices[Lines[index].Index2].Location.Y), 2)));
       }
 
+      /// <param name="theta">Angle in radians</param>
       public void Rotate(double theta)
       {
          //theta *= Math.PI / 180;
@@ -74,36 +78,38 @@ namespace EternalEngine
          double l;
          inittheta = Math.Atan2(v.Location.Y - cm.Y, v.Location.X - cm.X);
          l = Math.Sqrt(Math.Pow(v.Location.X - cm.X, 2) + Math.Pow(v.Location.Y - cm.Y, 2));
-         return new PointF(cm.X + (float)(l * Math.Cos(AngularInertia + inittheta)) + Inertia.Width,
-             cm.Y + (float)(l * Math.Sin(AngularInertia + inittheta)) + Inertia.Height);
+         return new PointF(cm.X + (float)(l * Math.Cos(AngularVelocity + inittheta)) + Velocity.Width,
+             cm.Y + (float)(l * Math.Sin(AngularVelocity + inittheta)) + Velocity.Height);
       }
       public PointF Ghost(int index)
       {
          return Ghost(Vertices[index]);
       }
 
-      public void ApplyInertia()
+      public void ApplyVelocities()
       {
-         Rotate(AngularInertia);
-         Location = Location + Inertia;
+         Rotate(AngularVelocity);
+         Location = Location + Velocity;
       }
 
       /// <param name="point">World coordinates</param>
       public void Push(PointF point, SizeF push)
       {
          PointF cm = CenterofMass;
+         //Debug.Write("push: " + this.Velocity + " pushed " + push);
+
          float theta = (float)(Math.Atan2(push.Height, push.Width) - Math.Atan2(point.Y - cm.Y, point.X - cm.X));
-         float leverarm = Math.Abs((float)(Math.Sqrt(Math.Pow(point.X - cm.X, 2) + Math.Pow(point.Y - cm.Y, 2)) *  // r * sin(Θ)
-            Math.Sin(theta)));
-         Debug.WriteLine(push);
 
-         //Inertia
-         Inertia = new SizeF(Inertia.Width + (push.Width / Mass) * (float)Math.Cos(theta),
-            Inertia.Height - (push.Height / Mass) * (float)Math.Sin(theta));
+         //Velocity
+         Velocity = new SizeF(Velocity.Width + (push.Width / Mass) * (float)Math.Cos(theta),
+            Velocity.Height - (push.Height / Mass) * (float)Math.Sin(theta));
 
-         //Angular Inertia
+         //Angular Velocity
          //Thanks to http://hyperphysics.phy-astr.gsu.edu/Hbase/torq2.html
-         AngularInertia += ((float)Math.Sqrt(Math.Pow(push.Width, 2) + Math.Pow(push.Height, 2)) * leverarm) / MomentofInertia; // F * lever arm length
+         float leverarm = Math.Abs((float)(Math.Sqrt(Math.Pow(point.X - cm.X, 2) + Math.Pow(point.Y - cm.Y, 2)) * Math.Sin(theta))); // r * sin(Θ)
+         AngularVelocity -= ((float)Math.Sqrt(Math.Pow(push.Width, 2) + Math.Pow(push.Height, 2)) * leverarm) / (MomentofInertia * 10); // F * lever arm length
+
+         //Debug.WriteLine(" for " + this.Velocity);
       }
 
       /// <summary>
@@ -120,10 +126,19 @@ namespace EternalEngine
          }
       }
 
-      public virtual SizeF Inertia { get; set; }
+      /// <summary>
+      /// Velocity in pixels per frame
+      /// </summary>
+      public virtual SizeF Velocity { get; set; }
 
-      public virtual float AngularInertia { get; set; }
+      /// <summary>
+      /// Angular velocity in radians per frame
+      /// </summary>
+      public virtual float AngularVelocity { get; set; }
 
+      /// <summary>
+      /// Gets moment of inertia around the center of mass in specks per pixel squared.
+      /// </summary>
       public float MomentofInertia
       {
          get
@@ -184,7 +199,7 @@ namespace EternalEngine
 
       public string ModelName { get; set; }
 
-      public override float AngularInertia { get { return 0f; } set { } }
+      public override float AngularVelocity { get { return 0f; } set { } }
 
       private Animation m_animation;
       public Animation Animation
@@ -213,8 +228,8 @@ namespace EternalEngine
       {
       }
 
-      public override SizeF Inertia { get { return new SizeF(0, 0); } set { } }
-      public override float AngularInertia { get { return 0; } set { } }
+      public override SizeF Velocity { get { return new SizeF(0, 0); } set { } }
+      public override float AngularVelocity { get { return 0; } set { } }
       public override float Mass { get { return float.MaxValue; } }
    }
 
@@ -225,8 +240,8 @@ namespace EternalEngine
       {
       }
 
-      public override SizeF Inertia { get { return new SizeF(0, 0); } set { } }
-      public override float AngularInertia { get { return 0; } set { } }
+      public override SizeF Velocity { get { return new SizeF(0, 0); } set { } }
+      public override float AngularVelocity { get { return 0; } set { } }
    }
 
    [Serializable]

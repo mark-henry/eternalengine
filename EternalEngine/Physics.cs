@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Drawing;
-using System.Collections;
 
 namespace EternalEngine
 {
@@ -14,7 +12,7 @@ namespace EternalEngine
          m_entities = entities;
          Gravity = 1f;
          AirResistance = .99f;
-         ElasticityCoefficient = .95f;
+         ElasticityCoefficient = 1f;
       }
 
       public float Gravity { get; set; }
@@ -29,7 +27,7 @@ namespace EternalEngine
       {
          foreach (Entity e in m_entities)
          {
-            e.Inertia = new SizeF(e.Inertia.Width * AirResistance, (e.Inertia.Height + Gravity) * AirResistance);
+            e.Velocity = new SizeF(e.Velocity.Width * AirResistance, (e.Velocity.Height + Gravity) * AirResistance);
          }
       }
 
@@ -41,60 +39,68 @@ namespace EternalEngine
             for (int c = e + 1; c < ents.Count; c++)
             {
                //Check ent e against ent c for collide
-               if (ents[e].PhysBox.IntersectsWith(m_entities[c].PhysBox))
+               if (ents[e].PhysBox.IntersectsWith(ents[c].PhysBox))
                {
                   Debug.Print("Physics: PhysBox collision between entity {0} and entity {1}", e, c);
                   //Check Vertex v against each Line l in Entity c
-                  PointF intersection;
                   SizeF translationE = new SizeF(ents[e].Location);
                   SizeF translationC = new SizeF(ents[c].Location);
                   float elasticity = ents[e].Material.Elasticity * ents[c].Material.Elasticity * ElasticityCoefficient;
                   Debug.WriteLine("Physics: Elasticity: " + elasticity);
-                  foreach (Vertex v in ents[e].Vertices)
-                  {
-                     foreach (Line l in ents[c].Lines)
-                     {
-                        intersection = Intersection(v.Location + translationE, ents[e].Ghost(v) + translationE,
-                            ents[c].Ghost(l.Index1) + translationC, ents[c].Ghost(l.Index2) + translationC);
-                        if (!intersection.IsEmpty)
-                        {
-                           SizeF ev = new SizeF(ents[e].Ghost(v).X - v.Location.X, ents[e].Ghost(v).Y - v.Location.Y);
-                           SizeF cv = new SizeF(ents[c].Ghost(v).X - v.Location.X, ents[c].Ghost(v).Y - v.Location.Y);
-
-                           SizeF inc = ev - cv;
-
-                           float thetatan = (float)Math.Atan2(ents[c].Vertices[l.Index1].Location.Y - ents[c].Vertices[l.Index2].Location.Y,
-                               ents[c].Vertices[l.Index1].Location.X - ents[c].Vertices[l.Index2].Location.X);
-
-                           float tanmag = (float)(Math.Sqrt(Math.Pow(inc.Width, 2) + Math.Pow(inc.Height, 2)) *
-                              Math.Cos(thetatan - Math.Atan2(inc.Height, inc.Width)));
-
-                           SizeF tan = new SizeF((float)(tanmag * Math.Cos(((3 * Math.PI) / 2) - thetatan)),
-                              (float)(tanmag * Math.Sin(((3 * Math.PI) / 2) - thetatan)));
-
-                           SizeF push = new SizeF(elasticity * (inc.Width - tan.Width + (float)Math.Cos(Friction)), elasticity * (tan.Height - inc.Height - (float)Math.Sin(Friction)));
-
-                           ents[e].Push(intersection, push);
-                           ents[c].Push(intersection, new SizeF(-push.Height, -push.Width));
-
-                           Debug.WriteLine("Physics: Push: " + new SizeF(inc.Width - tan.Width, tan.Height - inc.Height).ToString());
-                        }
-                     }
-                  }
+                  Collide(ents[e], ents[c], translationE, translationC);
+                  Collide(ents[c], ents[e], translationC, translationE);
                }
             }
          }
       }
 
-      public void ApplyInertia()
+      private void Collide(Entity e, Entity c, SizeF translationE, SizeF translationC)
       {
-         foreach (Entity e in m_entities)
+         PointF intersection;
+         float elasticity = e.Material.Elasticity * c.Material.Elasticity * ElasticityCoefficient;
+         foreach (Vertex v in e.Vertices)
          {
-            e.ApplyInertia();
+            foreach (Line l in c.Lines)
+            {
+               intersection = Intersection(v.Location + translationE, e.Ghost(v) + translationE,
+                   c.Ghost(l.Index1) + translationC, c.Ghost(l.Index2) + translationC);
+               if (!intersection.IsEmpty)
+               {
+                  SizeF ev = new SizeF(e.Ghost(v).X - v.Location.X, e.Ghost(v).Y - v.Location.Y);
+                  SizeF cv = new SizeF(c.Ghost(v).X - v.Location.X, c.Ghost(v).Y - v.Location.Y);
+
+                  SizeF inc = ev - cv;
+
+                  float thetatan = (float)Math.Atan2(c.Vertices[l.Index1].Location.Y - c.Vertices[l.Index2].Location.Y,
+                      c.Vertices[l.Index1].Location.X - c.Vertices[l.Index2].Location.X);
+
+                  float tanmag = (float)(Math.Sqrt(Math.Pow(inc.Width, 2) + Math.Pow(inc.Height, 2)) *
+                     Math.Cos(thetatan - Math.Atan2(inc.Height, inc.Width)));
+
+                  SizeF tan = new SizeF((float)(tanmag * Math.Cos(((3 * Math.PI) / 2) - thetatan)),
+                     (float)(tanmag * Math.Sin(((3 * Math.PI) / 2) - thetatan)));
+
+                  SizeF push = new SizeF(elasticity * (inc.Width - tan.Width),
+                     elasticity * (tan.Height - inc.Height));
+
+                  e.Push(intersection, push);
+                  c.Push(intersection, new SizeF(-push.Height, -push.Width));
+
+                  //Debug.WriteLine("Physics: Push: " + new SizeF(inc.Width - tan.Width, tan.Height - inc.Height).ToString());
+               }
+            }
          }
       }
 
-      public PointF Intersection(PointF a1, PointF a2, PointF b1, PointF b2)
+      public void ApplyVelocities()
+      {
+         foreach (Entity e in m_entities)
+         {
+            e.ApplyVelocities();
+         }
+      }
+
+      private PointF Intersection(PointF a1, PointF a2, PointF b1, PointF b2)
       {
          // Code based on http://local.wasp.uwa.edu.au/~pbourke/geometry/lineline2d/
          float denom = (b2.Y - b1.Y) * (a2.X - a1.X) - (b2.X - b1.X) * (a2.Y - a1.Y);
