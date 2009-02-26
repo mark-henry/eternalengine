@@ -8,7 +8,7 @@ namespace EternalEngineDemo
 {
    public partial class Form1 : Form
    {
-      private Camera cam = new Camera();
+      private Camera cam = new Camera(100, -150);
       private Map map = new Map();
       private int ticker = 0;
       private Physics phys;
@@ -44,7 +44,6 @@ namespace EternalEngineDemo
          map.Entities[1].Location = new PointF(0, 50);
          map.Entities[1].Material = Material.Steel;
       }
-
       private void InitializeEnts2()
       {
          map.Entities.Clear();

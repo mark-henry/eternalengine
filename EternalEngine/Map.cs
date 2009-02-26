@@ -4,17 +4,21 @@ using System;
 
 namespace EternalEngine
 {
-    [Serializable]
-    public class Map
-    {
-        public Map() { this.StartPoint = new Point(0, 0); Entities = new List<Entity>(); }
-        public Map(Point StartPoint) { this.StartPoint = StartPoint; Entities = new List<Entity>(); }
+   [Serializable]
+   public class Map
+   {
+      public Map(Point startPoint)
+      {
+         StartPoint = startPoint;
+         Entities = new List<Entity>();
+      }
+      public Map() : this(new Point(0, 0)) { }
 
-        public List<Entity> Entities { get; set; }
+      public List<Entity> Entities { get; set; }
 
-        /// <summary>
-        /// The point at which the player enters the map
-        /// </summary>
-        public Point StartPoint { get; set; }
-    }
+      /// <summary>
+      /// The point at which the player enters the map
+      /// </summary>
+      public Point StartPoint { get; private set; }
+   }
 }
