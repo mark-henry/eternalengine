@@ -31,9 +31,21 @@ namespace EternalEngineDemo
          map.Entities.Clear();
 
          map.Entities.Add(new PropEntity());
+         //map.Entities[0].Vertices.Add(new Vertex(0, 0));
+         //map.Entities[0].Vertices.Add(new Vertex(50, 0));
+         //map.Entities[0].Vertices.Add(new Vertex(50, 50));
+         //map.Entities[0].Vertices.Add(new Vertex(0, 50));
+         //map.Entities[0].Lines.Add(new Line(0, 1, Color.Green, 2f));
+         //map.Entities[0].Lines.Add(new Line(1, 2, Color.Green, 2f));
+         //map.Entities[0].Lines.Add(new Line(2, 3, Color.Green, 2f));
+         //map.Entities[0].Lines.Add(new Line(3, 0, Color.Green, 2f));
+         //map.Entities[0].Location = new Point(0, -100);
+         //map.Entities[0].Material = Material.Steel;
+         //map.Entities[0].Velocity = new SizeF(0, -10);
+         //map.Entities[0].AngularVelocity = .1f;
          map.Entities[0].Lines.Add(new Line(0, 1, Color.Green, 2f));
-         map.Entities[0].Vertices.Add(new Vertex(0, -50));
-         map.Entities[0].Vertices.Add(new Vertex(25, 0));
+         map.Entities[0].Vertices.Add(new Vertex(0, -1));
+         map.Entities[0].Vertices.Add(new Vertex(28, -44));
          map.Entities[0].Location = new PointF(50, 20);
          map.Entities[0].Material = Material.Steel;
 
@@ -56,14 +68,14 @@ namespace EternalEngineDemo
          map.Entities[0].Material = Material.Steel;
 
          map.Entities.Add(new PropEntity());
-         map.Entities[1].Lines.Add(new Line(0, 1, Color.Green, 2f));
-         map.Entities[1].Lines.Add(new Line(1, 2, Color.Green, 2f));
-         map.Entities[1].Lines.Add(new Line(2, 3, Color.Green, 2f));
-         map.Entities[1].Lines.Add(new Line(3, 0, Color.Green, 2f));
          map.Entities[1].Vertices.Add(new Vertex(0, 0));
          map.Entities[1].Vertices.Add(new Vertex(50, 0));
          map.Entities[1].Vertices.Add(new Vertex(50, 50));
          map.Entities[1].Vertices.Add(new Vertex(0, 50));
+         map.Entities[1].Lines.Add(new Line(0, 1, Color.Green, 2f));
+         map.Entities[1].Lines.Add(new Line(1, 2, Color.Green, 2f));
+         map.Entities[1].Lines.Add(new Line(2, 3, Color.Green, 2f));
+         map.Entities[1].Lines.Add(new Line(3, 0, Color.Green, 2f));
          map.Entities[1].Location = new Point(-100, 0);
          map.Entities[1].Material = Material.Steel;
          map.Entities[1].Velocity = new SizeF(10, -10);
@@ -99,20 +111,22 @@ namespace EternalEngineDemo
             //    g.DrawEllipse(new Pen(Brushes.Coral, 2), WorldtoScreen(map.Entities[0].Ghost(v)).X - .5f + map.Entities[0].Location.X,
             //        WorldtoScreen(map.Entities[0].Ghost(v)).Y - .5f + map.Entities[0].Location.Y, 1, 1);
             //}
+            //g.DrawPath(new Pen(Brushes.Blue, 2f), phys.DebugBuffer);
+            //phys.DebugBuffer.Reset();
          }
          gui.Draw(g);
          //g.FillRegion(Brushes.Purple, gui.GetInvalidatedRegion());
          g.DrawString(ticker.ToString(), new Font(FontFamily.GenericMonospace, 10), Brushes.Gray, this.Width - 50, this.Height - 50);
       }
 
-      PointF ScreenToWorld(PointF p)
+      public PointF ScreenToWorld(PointF p)
       {
          PointF retp = new PointF(p.X, p.Y);
          retp.X = p.X + cam.Location.X - (this.ClientSize.Width / 2);
          retp.Y = p.Y + cam.Location.Y - (this.ClientSize.Height / 2);
          return retp;
       }
-      PointF WorldtoScreen(PointF p)
+      public PointF WorldtoScreen(PointF p)
       {
          PointF retp = new PointF(p.X, p.Y);
          retp.X = p.X - cam.Location.X + (this.ClientSize.Width / 2);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace EternalEngine
 {
@@ -13,6 +14,7 @@ namespace EternalEngine
          Gravity = 1f;
          AirResistance = .99f;
          ElasticityCoefficient = 1f;
+         //DebugBuffer = new GraphicsPath();
       }
 
       public float Gravity { get; set; }
@@ -46,7 +48,7 @@ namespace EternalEngine
                   SizeF translationE = new SizeF(ents[e].Location);
                   SizeF translationC = new SizeF(ents[c].Location);
                   float elasticity = ents[e].Material.Elasticity * ents[c].Material.Elasticity * ElasticityCoefficient;
-                  Debug.WriteLine("Physics: Elasticity: " + elasticity);
+                  //Debug.WriteLine("Physics: Elasticity: " + elasticity);
                   Collide(ents[e], ents[c], translationE, translationC);
                   Collide(ents[c], ents[e], translationC, translationE);
                }
@@ -66,6 +68,10 @@ namespace EternalEngine
                    c.Ghost(l.Index1) + translationC, c.Ghost(l.Index2) + translationC);
                if (!intersection.IsEmpty)
                {
+                  //tan is the tangent of the surface being bounced off of (on Entity e)
+                  //inc is the incident vector of the incoming object (Ent c)
+                  //We pretend Ent e is stationary
+
                   SizeF ev = new SizeF(e.Ghost(v).X - v.Location.X, e.Ghost(v).Y - v.Location.Y);
                   SizeF cv = new SizeF(c.Ghost(v).X - v.Location.X, c.Ghost(v).Y - v.Location.Y);
 
@@ -84,13 +90,17 @@ namespace EternalEngine
                      elasticity * (tan.Height - inc.Height));
 
                   e.Push(intersection, push);
+                  //DebugBuffer.AddLine(intersection, intersection + new SizeF(push.Width * 10, push.Height * 10));
                   c.Push(intersection, new SizeF(-push.Height, -push.Width));
+                  //DebugBuffer.AddLine(intersection, intersection - new SizeF(push.Width * 10, push.Height * 10));
 
                   //Debug.WriteLine("Physics: Push: " + new SizeF(inc.Width - tan.Width, tan.Height - inc.Height).ToString());
                }
             }
          }
       }
+
+      //public GraphicsPath DebugBuffer { get; set; }
 
       public void ApplyVelocities()
       {
