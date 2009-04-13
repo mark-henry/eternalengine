@@ -20,8 +20,6 @@ namespace AEternal
       int linkstep = 1;
       int firstlink;
       int secondlink;
-      bool success;
-
 
       public Form1()
       {
@@ -56,7 +54,7 @@ namespace AEternal
          else
          {
             currentfile.Animation.Keyframes.Add(trackBar1.Value, new Keyframe(currentfile.Vertices));
-            button1.Text = "Delete Keyframe";
+            button1.Text = "Delete &Keyframe";
          }
          Invalidate(new Rectangle(0, 0, 75, this.Height));
       }
@@ -261,38 +259,42 @@ namespace AEternal
       {
          if (e.Button == MouseButtons.Left)
          {
+            Drag(e);
+
             if (Mode == AnimatorModes.Modeler)
             {
                switch (CurrentTool)
                {
                   case ModelerTools.LinkVerticesWithLine:
-                     if (success && linkstep == 1)
+                     if (SelectVertex(e))
                      {
-                        linkstep = 2;
-                        firstlink = currentfile.SelectedVertex;
-                     }
-                     else if (success && linkstep == 2)
-                     {
-                        secondlink = currentfile.SelectedVertex;
-                        if (firstlink != secondlink)
+                        if (linkstep == 1)
                         {
-                           currentfile.Lines.Add(new Line(firstlink, secondlink, Color.Green, 2));
-                           linkstep = 1;
+                           linkstep = 2;
+                           firstlink = currentfile.SelectedVertex;
                         }
                         else
                         {
-                           Debug.WriteLine("Info: Selected same Vertex twice in linking with Line");
+                           secondlink = currentfile.SelectedVertex;
+                           if (firstlink != secondlink)
+                           {
+                              currentfile.Lines.Add(new Line(firstlink, secondlink, Color.Green, 2));
+                              linkstep = 1;
+                           }
+                           else
+                           {
+                              Debug.WriteLine("Info: Selected same Vertex twice in linking with Line");
+                           }
                         }
+
                      }
-                     Invalidate();
                      break;
                   case ModelerTools.NewVertex:
                      Vertex newv = new Vertex(ScreenToWorld((PointF)e.Location));
                      currentfile.Vertices.Add(newv);
-                     Invalidate();
                      break;
                   case ModelerTools.DeleteVertex:
-                     if (success)
+                     if (IsDragging)
                      {
                         currentfile.Vertices.RemoveAt(currentfile.SelectedVertex);
                         Line[] lines = new Line[currentfile.Lines.Count];
@@ -305,37 +307,69 @@ namespace AEternal
                               currentfile.Lines.Remove(l);
                         }
                         currentfile.SelectedVertex = -1;
-                        Invalidate();
                      }
                      break;
                }
             }
+            Invalidate();
          }
       }
 
       private void Form1_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
       {
-         if (CurrentTool == ModelerTools.MoveVertex && e.Button == MouseButtons.Left && success)
+         SelectVertex(e);
+         if (currentfile.SelectedVertex != -1 && IsDragging)
          {
             currentfile.Vertices[currentfile.SelectedVertex].Location = ScreenToWorld((PointF)e.Location);
-            Invalidate(new Rectangle(75, 0, this.Width - 75, this.Height));
+            Invalidate();
          }
+      }
 
+      private void Form1_MouseUp(object sender, MouseEventArgs e)
+      {
+         IsDragging = false;
+         currentfile.SelectedVertex = -1;
+         Invalidate();
+      }
+
+      private bool Drag(MouseEventArgs e)
+      {
          RectangleF hit = new RectangleF(ScreenToWorld((PointF)e.Location).X - 1.5f, ScreenToWorld((PointF)e.Location).Y - 1.5f, 3, 3);
          int ii = 0;
-         success = false;
          foreach (Vertex v in currentfile.Vertices)
          {
             if (hit.Contains((int)v.LocationX, (int)v.LocationY))
             {
-               success = true;
                currentfile.SelectedVertex = ii;
+               IsDragging = true;
+               return true;
             }
             ii++;
          }
-         if (!success) { currentfile.SelectedVertex = -1; Invalidate(new Rectangle(100, 0, this.Width - 100, this.Height)); }
-         else { Invalidate(new Rectangle(e.X - 10, e.Y - 10, 110, 60)); }
+         currentfile.SelectedVertex = -1;
+         return false;
       }
+
+      private bool IsDragging { get; set; }
+
+      private bool SelectVertex(MouseEventArgs e)
+      {
+         RectangleF hit = new RectangleF(ScreenToWorld((PointF)e.Location).X - 1.5f, ScreenToWorld((PointF)e.Location).Y - 1.5f, 3, 3);
+         int ii = 0;
+         foreach (Vertex v in currentfile.Vertices)
+         {
+            if (hit.Contains((int)v.LocationX, (int)v.LocationY))
+            {
+               currentfile.SelectedVertex = ii;
+               return true;
+            }
+            ii++;
+         }
+         currentfile.SelectedVertex = -1;
+         IsDragging = false;
+         return false;
+      }
+
 
       public PointF ScreenToWorld(PointF p)
       {

@@ -91,16 +91,28 @@ namespace EternalEngine
          PointF cm = CenterofMass;
          //Debug.Write("push: " + this.Velocity + " pushed " + push);
 
-         float theta = (float)(Math.Atan2(push.Height, push.Width) - Math.Atan2(point.Y - cm.Y, point.X - cm.X));
+         float theta = (float)(Math.Atan2(-push.Height, push.Width) - Math.Atan2(point.Y - cm.Y, point.X - cm.X));
+            //Angle between push and lever arm
+
+         Debug.WriteLine("theta: " + theta.ToString());
+         //Debug.WriteLine(this.ToString() + " push: " + Math.Atan2(push.Height, push.Width));
+         //Debug.WriteLine(this.ToString() + " lever: " + Math.Atan2(point.Y - cm.Y, point.X - cm.X));
 
          //Velocity
-         Velocity = new SizeF(Velocity.Width + (push.Width / Mass) * (float)Math.Cos(theta),
-            Velocity.Height - (push.Height / Mass) * (float)Math.Sin(theta));
+         Velocity = new SizeF(Velocity.Width - (push.Width / Mass) * (float)Math.Cos(theta),
+            Velocity.Height + (push.Height / Mass) * (float)Math.Sin(theta));
 
          //Angular Velocity
          //Thanks to http://hyperphysics.phy-astr.gsu.edu/Hbase/torq2.html
          float leverarm = (float)(Math.Sqrt(Math.Pow(point.X - cm.X, 2) + Math.Pow(point.Y - cm.Y, 2)) * Math.Sin(theta)); // r * sin(Θ)
-         AngularVelocity += ((float)Math.Sqrt(Math.Pow(push.Width, 2) + Math.Pow(push.Height, 2)) * leverarm) / (MomentofInertia * 20); // F * lever arm length
+         if (theta > 0 && theta < Math.PI) //counterclockwise fix?
+         {
+            AngularVelocity += ((float)Math.Sqrt(Math.Pow(push.Width, 2) + Math.Pow(push.Height, 2)) * leverarm) / (MomentofInertia * 20); // F * lever arm length
+         }
+         else
+         {
+            AngularVelocity -= ((float)Math.Sqrt(Math.Pow(push.Width, 2) + Math.Pow(push.Height, 2)) * leverarm) / (MomentofInertia * 20); // F * lever arm length
+         }
 
          //Debug.WriteLine(" for " + this.Velocity);
       }
@@ -112,10 +124,11 @@ namespace EternalEngine
       {
          get
          {
-            return new RectangleF(Location.X + Vertices.Min<Vertex>(v => Ghost(v).X),
-                Location.Y + Vertices.Min<Vertex>(v => Ghost(v).Y),
-                Vertices.Max<Vertex>(v => Ghost(v).X) - Vertices.Min<Vertex>(v => Ghost(v).X),
-                Vertices.Max<Vertex>(v => Ghost(v).Y) - Vertices.Min<Vertex>(v => Ghost(v).Y));
+            PointF min = new PointF(Location.X + Math.Min(Vertices.Min<Vertex>(v => Ghost(v).X), Vertices.Min<Vertex>(v => v.Location.X)),
+                Location.Y + Math.Min(Vertices.Min<Vertex>(v => Ghost(v).Y), Vertices.Min<Vertex>(v => v.Location.Y)));
+            PointF max = new PointF(Location.X + Math.Max(Vertices.Max<Vertex>(v => Ghost(v).X), Vertices.Max<Vertex>(v => v.Location.X)),
+                Location.Y + Math.Max(Vertices.Max<Vertex>(v => Ghost(v).Y), Vertices.Max<Vertex>(v => v.Location.Y)));
+            return new RectangleF(min, new SizeF(max) - new SizeF(min));
          }
       }
 
