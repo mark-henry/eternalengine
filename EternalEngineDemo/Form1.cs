@@ -31,6 +31,7 @@ namespace EternalEngineDemo
          map.Entities.Clear();
 
          map.Entities.Add(new PropEntity());
+
          //map.Entities[0].Vertices.Add(new Vertex(0, 0));
          //map.Entities[0].Vertices.Add(new Vertex(50, 0));
          //map.Entities[0].Vertices.Add(new Vertex(50, 50));
@@ -43,6 +44,7 @@ namespace EternalEngineDemo
          //map.Entities[0].Material = Material.Steel;
          //map.Entities[0].Velocity = new SizeF(0, -10);
          //map.Entities[0].AngularVelocity = .1f;
+
          map.Entities[0].Lines.Add(new Line(0, 1, Color.Green, 2f));
          map.Entities[0].Vertices.Add(new Vertex(0, -1));
          map.Entities[0].Vertices.Add(new Vertex(28, -44));

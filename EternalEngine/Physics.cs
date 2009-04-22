@@ -33,6 +33,14 @@ namespace EternalEngine
          }
       }
 
+      public void ApplyVelocities()
+      {
+         foreach (Entity e in m_entities)
+         {
+            e.ApplyVelocities();
+         }
+      }
+
       public void CollisionDetection()
       {
          List<Entity> ents = m_entities.FindAll(e => !(e is SceneryEntity));
@@ -50,7 +58,7 @@ namespace EternalEngine
                   float elasticity = ents[e].Material.Elasticity * ents[c].Material.Elasticity * ElasticityCoefficient;
                   //Debug.WriteLine("Physics: Elasticity: " + elasticity);
                   Collide(ents[e], ents[c], translationE, translationC);
-                  Collide(ents[c], ents[e], translationC, translationE);
+                  //Collide(ents[c], ents[e], translationC, translationE);
                }
             }
          }
@@ -84,10 +92,10 @@ namespace EternalEngine
                      Math.Cos(thetatan - Math.Atan2(inc.Height, inc.Width)));
 
                   SizeF tan = new SizeF((float)(tanmag * Math.Cos(((3 * Math.PI) / 2) - thetatan)),
-                     (float)(tanmag * Math.Sin(((3 * Math.PI) / 2) - thetatan)));
+                                        (float)(tanmag * Math.Sin(((3 * Math.PI) / 2) - thetatan)));
 
-                  SizeF push = new SizeF(elasticity * (inc.Width - tan.Width),
-                     elasticity * (tan.Height - inc.Height));
+                  SizeF push = new SizeF(elasticity * 2 * (inc.Width - tan.Width) * e.Mass, //impulse to pass to Push()
+                                         elasticity * 2 * (tan.Height - inc.Height) * e.Mass);
 
                   e.Push(intersection, push);
                   //DebugBuffer.AddLine(intersection, intersection + new SizeF(push.Width * 10, push.Height * 10));
@@ -97,16 +105,6 @@ namespace EternalEngine
                   //Debug.WriteLine("Physics: Push: " + new SizeF(inc.Width - tan.Width, tan.Height - inc.Height).ToString());
                }
             }
-         }
-      }
-
-      //public GraphicsPath DebugBuffer { get; set; }
-
-      public void ApplyVelocities()
-      {
-         foreach (Entity e in m_entities)
-         {
-            e.ApplyVelocities();
          }
       }
 
@@ -146,6 +144,8 @@ namespace EternalEngine
             return new PointF();
          }
       }
+
+      //public GraphicsPath DebugBuffer { get; set; }
 
       //public PointF Intersection(PointF a1, PointF a2, PointF b1, PointF b2)
       //{
