@@ -86,6 +86,7 @@ namespace EternalEngine
       }
 
       /// <param name="point">World coordinates</param>
+      /// <param name="push">Impulse in specks times pixels per frame</param>
       public void Push(PointF point, SizeF push)
       {
          PointF cm = CenterofMass;
@@ -99,13 +100,13 @@ namespace EternalEngine
          //Debug.WriteLine(this.ToString() + " lever: " + Math.Atan2(point.Y - cm.Y, point.X - cm.X));
 
          //Velocity
-         Velocity = new SizeF(Velocity.Width - (push.Width / Mass) * (float)Math.Cos(theta),
-            Velocity.Height + (push.Height / Mass) * (float)Math.Sin(theta));
+         this.Velocity = new SizeF(this.Velocity.Width - (push.Width / this.Mass) * (float)Math.Cos(theta),
+            this.Velocity.Height + (push.Height / this.Mass) * (float)Math.Sin(theta));
 
          //Angular Velocity
          //Thanks to http://hyperphysics.phy-astr.gsu.edu/Hbase/torq2.html
          float leverarm = (float)(Math.Sqrt(Math.Pow(point.X - cm.X, 2) + Math.Pow(point.Y - cm.Y, 2)) * Math.Sin(theta)); // r * sin(Θ)
-         if (theta > 0 && theta < Math.PI) //counterclockwise fix?
+         if (theta > 0 && theta < Math.PI) //counterclockwise fix
          {
             AngularVelocity += ((float)Math.Sqrt(Math.Pow(push.Width, 2) + Math.Pow(push.Height, 2)) * leverarm) / (MomentofInertia * 20); // F * lever arm length
          }
