@@ -58,7 +58,7 @@ namespace EternalEngine
                   float elasticity = ents[e].Material.Elasticity * ents[c].Material.Elasticity * ElasticityCoefficient;
                   //Debug.WriteLine("Physics: Elasticity: " + elasticity);
                   Collide(ents[e], ents[c], translationE, translationC);
-                  //Collide(ents[c], ents[e], translationC, translationE);
+                  Collide(ents[c], ents[e], translationC, translationE);
                }
             }
          }
@@ -67,7 +67,7 @@ namespace EternalEngine
       private void Collide(Entity e, Entity c, SizeF translationE, SizeF translationC)
       {
          PointF intersection;
-         float elasticity = e.Material.Elasticity * c.Material.Elasticity * ElasticityCoefficient;
+         //float elasticity = e.Material.Elasticity * c.Material.Elasticity * ElasticityCoefficient;
          foreach (Vertex v in e.Vertices)
          {
             foreach (Line l in c.Lines)
@@ -81,21 +81,23 @@ namespace EternalEngine
                   //We pretend Ent e is stationary
 
                   SizeF ev = new SizeF(e.Ghost(v).X - v.Location.X, e.Ghost(v).Y - v.Location.Y);
-                  SizeF cv = new SizeF(c.Ghost(v).X - v.Location.X, c.Ghost(v).Y - v.Location.Y);
+                  SizeF cv = new SizeF(c.Ghost(l.Index1).X - c.Vertices[l.Index1].Location.X, c.Ghost(l.Index1).Y - c.Vertices[l.Index1].Location.Y);
 
                   SizeF inc = ev - cv;
 
-                  float thetatan = (float)Math.Atan2(c.Vertices[l.Index1].Location.Y - c.Vertices[l.Index2].Location.Y,
+                  float thetatan = -(float)Math.Atan2(c.Vertices[l.Index1].Location.Y - c.Vertices[l.Index2].Location.Y,
                       c.Vertices[l.Index1].Location.X - c.Vertices[l.Index2].Location.X);
 
                   float tanmag = (float)(Math.Sqrt(Math.Pow(inc.Width, 2) + Math.Pow(inc.Height, 2)) *
-                     Math.Cos(thetatan - Math.Atan2(inc.Height, inc.Width)));
+                     Math.Cos(thetatan + Math.Atan2(inc.Height, inc.Width)));
 
-                  SizeF tan = new SizeF((float)(tanmag * Math.Cos(((3 * Math.PI) / 2) - thetatan)),
-                                        (float)(tanmag * Math.Sin(((3 * Math.PI) / 2) - thetatan)));
+                  SizeF tan = new SizeF((float)(tanmag * Math.Cos(//((/*3 * */Math.PI) /*/ 2*/) - thetatan)),
+                     -thetatan )),
+                                        (float)(tanmag * Math.Sin(//((/*3 * */Math.PI) /*/ 2*/) - thetatan)));
+                                        -thetatan )));
 
-                  SizeF push = new SizeF(elasticity * 2 * (inc.Width - tan.Width) * e.Mass, //impulse to pass to Push()
-                                         elasticity * 2 * (tan.Height - inc.Height) * e.Mass);
+                  SizeF push = new SizeF(this.ElasticityCoefficient * 2 * (inc.Width - tan.Width) * e.Mass, //impulse to pass to Push()
+                                         this.ElasticityCoefficient * 2 * (tan.Height - inc.Height) * e.Mass);
 
                   e.Push(intersection, push);
                   //DebugBuffer.AddLine(intersection, intersection + new SizeF(push.Width * 10, push.Height * 10));
@@ -108,6 +110,10 @@ namespace EternalEngine
          }
       }
 
+      /// <summary>
+      /// Do two lines intersect
+      /// </summary>
+      /// <returns>Returns empty point if no intersection</returns>
       private PointF Intersection(PointF a1, PointF a2, PointF b1, PointF b2)
       {
          // Code based on http://local.wasp.uwa.edu.au/~pbourke/geometry/lineline2d/

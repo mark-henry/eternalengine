@@ -106,13 +106,20 @@ namespace EternalEngineDemo
             //    WorldtoScreen(map.Entities[0].CenterofMass).Y - .5f + map.Entities[0].Location.Y, 1, 1);
             RectangleF r = new RectangleF(WorldtoScreen(map.Entities[0].PhysBox.Location), map.Entities[0].PhysBox.Size);
             RectangleF r2 = new RectangleF(WorldtoScreen(map.Entities[1].PhysBox.Location), map.Entities[1].PhysBox.Size);
-            g.DrawRectangle(new Pen(Brushes.Coral, 2f), r.X, r.Y, r.Width, r.Height);
-            g.DrawRectangle(new Pen(Brushes.Coral, 2f), r2.X, r2.Y, r2.Width, r2.Height);
-            //foreach (Vertex v in map.Entities[0].Vertices)
-            //{
-            //    g.DrawEllipse(new Pen(Brushes.Coral, 2), WorldtoScreen(map.Entities[0].Ghost(v)).X - .5f + map.Entities[0].Location.X,
-            //        WorldtoScreen(map.Entities[0].Ghost(v)).Y - .5f + map.Entities[0].Location.Y, 1, 1);
-            //}
+            //g.DrawRectangle(new Pen(Brushes.Coral, 2f), r.X, r.Y, r.Width, r.Height);
+            //g.DrawRectangle(new Pen(Brushes.Coral, 2f), r2.X, r2.Y, r2.Width, r2.Height);
+
+            foreach (Vertex v in map.Entities[0].Vertices) //Ghosts
+            {
+               g.DrawEllipse(new Pen(Brushes.Violet, 2), WorldtoScreen(map.Entities[0].Ghost(v)).X - .5f + map.Entities[0].Location.X,
+                   WorldtoScreen(map.Entities[0].Ghost(v)).Y - .5f + map.Entities[0].Location.Y, 1, 1);
+            }
+            foreach (Vertex v in map.Entities[1].Vertices) //Ghosts
+            {
+               g.DrawEllipse(new Pen(Brushes.Violet, 2), WorldtoScreen(map.Entities[1].Ghost(v)).X - .5f + map.Entities[1].Location.X,
+                   WorldtoScreen(map.Entities[1].Ghost(v)).Y - .5f + map.Entities[1].Location.Y, 1, 1);
+            }
+
             //g.DrawPath(new Pen(Brushes.Blue, 2f), phys.DebugBuffer);
             //phys.DebugBuffer.Reset();
          }
