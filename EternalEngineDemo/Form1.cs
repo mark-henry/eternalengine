@@ -8,157 +8,154 @@ namespace EternalEngineDemo
 {
    public partial class Form1 : Form
    {
-      private Camera cam = new Camera(100, -150);
-      private Map map = new Map();
       private int ticker = 0;
-      private Physics phys;
-      private GUI gui;
+      private Engine eng;
 
       public Form1()
       {
          InitializeComponent();
 
+         eng = new Engine(new PointF(100, -150), this.ClientSize);
+         eng.Camera.Location = new PointF(-100, -200);
+         eng.GUI.UnPause += new EventHandler(this.gui_UnPause);
+
          InitializeEnts1();
-
-         phys = new Physics(map.Entities);
-
-         gui = new GUI(this.ClientSize);
-         gui.UnPause += new EventHandler(this.GUI_UnPause);
       }
 
       private void InitializeEnts1()
       {
-         map.Entities.Clear();
+         eng.Map.Entities.Clear();
 
-         map.Entities.Add(new PropEntity());
+         eng.Map.Entities.Add(new PropEntity());
 
-         //map.Entities[0].Vertices.Add(new Vertex(0, 0));
-         //map.Entities[0].Vertices.Add(new Vertex(50, 0));
-         //map.Entities[0].Vertices.Add(new Vertex(50, 50));
-         //map.Entities[0].Vertices.Add(new Vertex(0, 50));
-         //map.Entities[0].Lines.Add(new Line(0, 1, Color.Green, 2f));
-         //map.Entities[0].Lines.Add(new Line(1, 2, Color.Green, 2f));
-         //map.Entities[0].Lines.Add(new Line(2, 3, Color.Green, 2f));
-         //map.Entities[0].Lines.Add(new Line(3, 0, Color.Green, 2f));
-         //map.Entities[0].Location = new Point(0, -100);
-         //map.Entities[0].Material = Material.Steel;
-         //map.Entities[0].Velocity = new SizeF(0, -10);
-         //map.Entities[0].AngularVelocity = .1f;
+         //eng.Map.Entities[0].Vertices.Add(new Vertex(0, 0));
+         //eng.Map.Entities[0].Vertices.Add(new Vertex(50, 0));
+         //eng.Map.Entities[0].Vertices.Add(new Vertex(50, 50));
+         //eng.Map.Entities[0].Vertices.Add(new Vertex(0, 50));
+         //eng.Map.Entities[0].Lines.Add(new Line(0, 1, Color.Green, 2f));
+         //eng.Map.Entities[0].Lines.Add(new Line(1, 2, Color.Green, 2f));
+         //eng.Map.Entities[0].Lines.Add(new Line(2, 3, Color.Green, 2f));
+         //eng.Map.Entities[0].Lines.Add(new Line(3, 0, Color.Green, 2f));
+         //eng.Map.Entities[0].Location = new Point(0, -100);
+         //eng.Map.Entities[0].Material = Material.Steel;
+         //eng.Map.Entities[0].Velocity = new SizeF(0, -10);
+         //eng.Map.Entities[0].AngularVelocity = .1f;
 
-         map.Entities[0].Lines.Add(new Line(0, 1, Color.Green, 2f));
-         map.Entities[0].Vertices.Add(new Vertex(0, -1));
-         map.Entities[0].Vertices.Add(new Vertex(28, -44));
-         map.Entities[0].Location = new PointF(50, 20);
-         map.Entities[0].Material = Material.Steel;
+         eng.Map.Entities[0].Lines.Add(new Line(0, 1, Color.Green, 2f));
+         eng.Map.Entities[0].Vertices.Add(new Vertex(0, -1));
+         eng.Map.Entities[0].Vertices.Add(new Vertex(28, -44));
+         eng.Map.Entities[0].Location = new PointF(50, 20);
+         eng.Map.Entities[0].Material = Material.Steel;
 
-         map.Entities.Add(new BrushEntity());
-         map.Entities[1].Lines.Add(new Line(0, 1, Color.Firebrick, 2f));
-         map.Entities[1].Vertices.Add(new Vertex(-100, 0));
-         map.Entities[1].Vertices.Add(new Vertex(150, 0));
-         map.Entities[1].Location = new PointF(0, 50);
-         map.Entities[1].Material = Material.Steel;
+         eng.Map.Entities.Add(new BrushEntity());
+         eng.Map.Entities[1].Lines.Add(new Line(0, 1, Color.Firebrick, 2f));
+         eng.Map.Entities[1].Vertices.Add(new Vertex(-100, 0));
+         eng.Map.Entities[1].Vertices.Add(new Vertex(150, 0));
+         eng.Map.Entities[1].Location = new PointF(0, 50);
+         eng.Map.Entities[1].Material = Material.Steel;
       }
       private void InitializeEnts2()
       {
-         map.Entities.Clear();
+         eng.Map.Entities.Clear();
 
-         map.Entities.Add(new BrushEntity());
-         map.Entities[0].Lines.Add(new Line(0, 1, Color.Firebrick, 2f));
-         map.Entities[0].Vertices.Add(new Vertex(0, 0));
-         map.Entities[0].Vertices.Add(new Vertex(0, 500));
-         map.Entities[0].Location = new PointF(100, -250);
-         map.Entities[0].Material = Material.Steel;
+         eng.Map.Entities.Add(new BrushEntity());
+         eng.Map.Entities[0].Lines.Add(new Line(0, 1, Color.Firebrick, 2f));
+         eng.Map.Entities[0].Vertices.Add(new Vertex(0, 0));
+         eng.Map.Entities[0].Vertices.Add(new Vertex(0, 500));
+         eng.Map.Entities[0].Location = new PointF(100, -250);
+         eng.Map.Entities[0].Material = Material.Steel;
 
-         map.Entities.Add(new PropEntity());
-         map.Entities[1].Vertices.Add(new Vertex(0, 0));
-         map.Entities[1].Vertices.Add(new Vertex(50, 0));
-         map.Entities[1].Vertices.Add(new Vertex(50, 50));
-         map.Entities[1].Vertices.Add(new Vertex(0, 50));
-         map.Entities[1].Lines.Add(new Line(0, 1, Color.Green, 2f));
-         map.Entities[1].Lines.Add(new Line(1, 2, Color.Green, 2f));
-         map.Entities[1].Lines.Add(new Line(2, 3, Color.Green, 2f));
-         map.Entities[1].Lines.Add(new Line(3, 0, Color.Green, 2f));
-         map.Entities[1].Location = new Point(-100, 0);
-         map.Entities[1].Material = Material.Steel;
-         map.Entities[1].Velocity = new SizeF(10, -10);
-         map.Entities[1].AngularVelocity = .1f;
+         eng.Map.Entities.Add(new PropEntity());
+         eng.Map.Entities[1].Vertices.Add(new Vertex(0, 0));
+         eng.Map.Entities[1].Vertices.Add(new Vertex(50, 0));
+         eng.Map.Entities[1].Vertices.Add(new Vertex(50, 50));
+         eng.Map.Entities[1].Vertices.Add(new Vertex(0, 50));
+         eng.Map.Entities[1].Lines.Add(new Line(0, 1, Color.Green, 2f));
+         eng.Map.Entities[1].Lines.Add(new Line(1, 2, Color.Green, 2f));
+         eng.Map.Entities[1].Lines.Add(new Line(2, 3, Color.Green, 2f));
+         eng.Map.Entities[1].Lines.Add(new Line(3, 0, Color.Green, 2f));
+         eng.Map.Entities[1].Location = new Point(-100, 0);
+         eng.Map.Entities[1].Material = Material.Steel;
+         eng.Map.Entities[1].Velocity = new SizeF(10, -10);
+         eng.Map.Entities[1].AngularVelocity = .15f;
+      }
+      private void InitializeEnts3()
+      {
+         eng.Map.Entities.Clear();
+
+         eng.Map.Entities.Add(new PropEntity()); //box
+         eng.Map.Entities[0].Vertices.Add(new Vertex(0, 0));
+         eng.Map.Entities[0].Vertices.Add(new Vertex(50, 0));
+         eng.Map.Entities[0].Vertices.Add(new Vertex(50, 50));
+         eng.Map.Entities[0].Vertices.Add(new Vertex(0, 50));
+         eng.Map.Entities[0].Lines.Add(new Line(0, 1, Color.Green, 2f));
+         eng.Map.Entities[0].Lines.Add(new Line(1, 2, Color.Green, 2f));
+         eng.Map.Entities[0].Lines.Add(new Line(2, 3, Color.Green, 2f));
+         eng.Map.Entities[0].Lines.Add(new Line(3, 0, Color.Green, 2f));
+         eng.Map.Entities[0].Location = new Point(-50, 10);
+         eng.Map.Entities[0].Material = Material.Steel;
+         eng.Map.Entities[0].AngularVelocity = 0.05f;
+
+         eng.Map.Entities.Add(new BrushEntity()); //floor
+         eng.Map.Entities[1].Lines.Add(new Line(0, 1, Color.Firebrick, 3f));
+         eng.Map.Entities[1].Vertices.Add(new Vertex(-100, 0));
+         eng.Map.Entities[1].Vertices.Add(new Vertex(150, 0));
+         eng.Map.Entities[1].Location = new PointF(0, 100);
+         eng.Map.Entities[1].Material = Material.Steel;
+         
+         eng.Map.Entities.Add(new PropEntity()); //top box
+         eng.Map.Entities[2].Vertices.Add(new Vertex(0, 0));
+         eng.Map.Entities[2].Vertices.Add(new Vertex(50, 0));
+         eng.Map.Entities[2].Vertices.Add(new Vertex(50, 50));
+         eng.Map.Entities[2].Vertices.Add(new Vertex(0, 50));
+         eng.Map.Entities[2].Lines.Add(new Line(0, 1, Color.Green, 2f));
+         eng.Map.Entities[2].Lines.Add(new Line(1, 2, Color.Green, 2f));
+         eng.Map.Entities[2].Lines.Add(new Line(2, 3, Color.Green, 2f));
+         eng.Map.Entities[2].Lines.Add(new Line(3, 0, Color.Green, 2f));
+         eng.Map.Entities[2].Location = new Point(-50, -60);
+         eng.Map.Entities[2].Material = Material.Steel;
+         eng.Map.Entities[2].AngularVelocity = -0.1f;
+
+         eng.Map.Entities.Add(new BrushEntity()); //wall
+         eng.Map.Entities[3].Vertices.Add(new Vertex(-100, 100));
+         eng.Map.Entities[3].Vertices.Add(new Vertex(-100, -300));
+         eng.Map.Entities[3].Lines.Add(new Line(0, 1, Color.Firebrick, 3f));
+         eng.Map.Entities[3].Location = new PointF(0, 0);
+         eng.Map.Entities[3].Material = Material.Steel;
       }
 
       private void Form1_Paint(object sender, PaintEventArgs e)
       {
-         Graphics g = e.Graphics;
-         g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-         if (gui.IsPaused)
-         { }
-         else
-         {
-            foreach (Entity ent in map.Entities)
-            {
-               foreach (Line l in ent.Lines)
-               {
-                  g.DrawLine(new Pen(l.Color, l.Width),
-                      WorldtoScreen(new PointF(ent.Vertices[l.Index1].Location.X + ent.Location.X, ent.Vertices[l.Index1].Location.Y + ent.Location.Y)),
-                      WorldtoScreen(new PointF(ent.Vertices[l.Index2].Location.X + ent.Location.X, ent.Vertices[l.Index2].Location.Y + ent.Location.Y)));
-                  //Debug.WriteLine(WorldtoScreen(ent.Vertices[l.Index1].Location).ToString() + "\n" + WorldtoScreen(ent.Vertices[l.Index2].Location).ToString());
-               }
-            }
-            //g.DrawEllipse(new Pen(Color.Indigo, 2), WorldtoScreen(map.Entities[0].CenterofMass).X - .5f + map.Entities[0].Location.X,
-            //    WorldtoScreen(map.Entities[0].CenterofMass).Y - .5f + map.Entities[0].Location.Y, 1, 1);
-            RectangleF r = new RectangleF(WorldtoScreen(map.Entities[0].PhysBox.Location), map.Entities[0].PhysBox.Size);
-            RectangleF r2 = new RectangleF(WorldtoScreen(map.Entities[1].PhysBox.Location), map.Entities[1].PhysBox.Size);
-            //g.DrawRectangle(new Pen(Brushes.Coral, 2f), r.X, r.Y, r.Width, r.Height);
-            //g.DrawRectangle(new Pen(Brushes.Coral, 2f), r2.X, r2.Y, r2.Width, r2.Height);
+         eng.Draw(e.Graphics);
 
-            foreach (Vertex v in map.Entities[0].Vertices) //Ghosts
-            {
-               g.DrawEllipse(new Pen(Brushes.Violet, 2), WorldtoScreen(map.Entities[0].Ghost(v)).X - .5f + map.Entities[0].Location.X,
-                   WorldtoScreen(map.Entities[0].Ghost(v)).Y - .5f + map.Entities[0].Location.Y, 1, 1);
-            }
-            foreach (Vertex v in map.Entities[1].Vertices) //Ghosts
-            {
-               g.DrawEllipse(new Pen(Brushes.Violet, 2), WorldtoScreen(map.Entities[1].Ghost(v)).X - .5f + map.Entities[1].Location.X,
-                   WorldtoScreen(map.Entities[1].Ghost(v)).Y - .5f + map.Entities[1].Location.Y, 1, 1);
-            }
+         RectangleF r = new RectangleF(eng.Camera.WorldtoScreen(eng.Map.Entities[0].PhysBox.Location), eng.Map.Entities[0].PhysBox.Size);
+         RectangleF r2 = new RectangleF(eng.Camera.WorldtoScreen(eng.Map.Entities[1].PhysBox.Location), eng.Map.Entities[1].PhysBox.Size);
+         //foreach (Vertex v in eng.Map.Entities[0].Vertices) //Ghosts
+         //{
+         //   e.Graphics.DrawEllipse(new Pen(Brushes.Violet, 2), eng.Camera.WorldtoScreen(eng.Map.Entities[0].Ghost(v)).X - .5f + eng.Map.Entities[0].Location.X,
+         //       eng.Camera.WorldtoScreen(eng.Map.Entities[0].Ghost(v)).Y - .5f + eng.Map.Entities[0].Location.Y, 1, 1);
+         //}
+         //foreach (Vertex v in eng.Map.Entities[1].Vertices) //Ghosts
+         //{
+         //   e.Graphics.DrawEllipse(new Pen(Brushes.Violet, 2), eng.Camera.WorldtoScreen(eng.Map.Entities[1].Ghost(v)).X - .5f + eng.Map.Entities[1].Location.X,
+         //       eng.Camera.WorldtoScreen(eng.Map.Entities[1].Ghost(v)).Y - .5f + eng.Map.Entities[1].Location.Y, 1, 1);
+         //}
 
-            //g.DrawPath(new Pen(Brushes.Blue, 2f), phys.DebugBuffer);
-            //phys.DebugBuffer.Reset();
-         }
-         gui.Draw(g);
-         //g.FillRegion(Brushes.Purple, gui.GetInvalidatedRegion());
-         g.DrawString(ticker.ToString(), new Font(FontFamily.GenericMonospace, 10), Brushes.Gray, this.Width - 50, this.Height - 50);
-      }
-
-      public PointF ScreenToWorld(PointF p)
-      {
-         PointF retp = new PointF(p.X, p.Y);
-         retp.X = p.X + cam.Location.X - (this.ClientSize.Width / 2);
-         retp.Y = p.Y + cam.Location.Y - (this.ClientSize.Height / 2);
-         return retp;
-      }
-      public PointF WorldtoScreen(PointF p)
-      {
-         PointF retp = new PointF(p.X, p.Y);
-         retp.X = p.X - cam.Location.X + (this.ClientSize.Width / 2);
-         retp.Y = p.Y - cam.Location.Y + (this.ClientSize.Height / 2);
-         return retp;
+         e.Graphics.DrawString(ticker.ToString(), new Font(FontFamily.GenericMonospace, 10), Brushes.Gray, this.Width - 50, this.Height - 50);
       }
 
       private void timer1_Tick(object sender, System.EventArgs e)
       {
          ticker++;
          Debug.WriteLine("Frame: " + ticker);
+         eng.OnTick();
+
          //Invalidate(new Rectangle(0, 0, 40, 15));
-         foreach (ActorEntity ae in phys.Entities.FindAll(ee => ee is ActorEntity))
-         {
-            ae.Animation.GoTo(ae.Vertices, ae.Animation.CurrentFrame + 1);
-         }
-         phys.ApplyGravityandAirResistance();
-         phys.CollisionDetection();
-         //phys.Entities[0].Push(phys.Entities[0].CenterofMass + new SizeF(5,-5), new SizeF(.01f, .01f));
-         phys.ApplyVelocities();
-         //map.Entities[0].Push(new PointF(0, 0), new SizeF(1, 0));
+         //eng.Physics.Entities[0].Push(eng.Physics.Entities[0].CenterofMass + new SizeF(5,-5), new SizeF(.01f, .01f));
+         //eng.Map.Entities[0].Push(new PointF(0, 0), new SizeF(1, 0));
+
          Region r = new Region();
-         r.Exclude(gui.GetInvalidatedRegion());
+         r.Exclude(eng.GUI.GetInvalidatedRegion());
          Invalidate(r);
       }
 
@@ -183,6 +180,10 @@ namespace EternalEngineDemo
                InitializeEnts2();
                Invalidate();
                break;
+            case Keys.F3:
+               InitializeEnts3();
+               Invalidate();
+               break;
             case Keys.S:
                timer1.Enabled = false;
                timer1_Tick(this, new EventArgs());
@@ -191,33 +192,34 @@ namespace EternalEngineDemo
                Application.Exit();
                break;
             case Keys.Escape:
-               timer1.Enabled = !gui.PauseToggle();
-               Invalidate(gui.GetInvalidatedRegion());
+               timer1.Enabled = !eng.GUI.PauseToggle();
+               Invalidate(eng.GUI.GetInvalidatedRegion());
                break;
          }
       }
 
-      private void GUI_UnPause(object sender, System.EventArgs e)
+      private void gui_UnPause(object sender, System.EventArgs e)
       {
          timer1.Enabled = true;
+         eng.OnTick();
       }
 
       private void Form1_Resize(object sender, System.EventArgs e)
       {
-         gui.ClientSize = this.ClientSize;
-         Invalidate(gui.GetInvalidatedRegion());
+         eng.GUI.ClientSize = this.ClientSize;
+         Invalidate(eng.GUI.GetInvalidatedRegion());
       }
 
       private void Form1_MouseClick(object sender, MouseEventArgs e)
       {
-         gui.OnClick(sender, e.Location, (int)e.Button);
-         Invalidate(gui.GetInvalidatedRegion());
+         eng.GUI.OnClick(sender, e.Location, (int)e.Button);
+         Invalidate(eng.GUI.GetInvalidatedRegion());
       }
 
       private void Form1_MouseMove(object sender, MouseEventArgs e)
       {
-         gui.MouseMove(e.Location);
-         Invalidate(gui.GetInvalidatedRegion());
+         eng.GUI.MouseMove(e.Location);
+         Invalidate(eng.GUI.GetInvalidatedRegion());
       }
    }
 }

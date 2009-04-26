@@ -13,7 +13,7 @@ namespace EternalEngine
          m_entities = entities;
          Gravity = 1f;
          AirResistance = .99f;
-         ElasticityCoefficient = 1f;
+         ElasticityCoefficient = 1.5f;
          //DebugBuffer = new GraphicsPath();
       }
 
@@ -30,6 +30,7 @@ namespace EternalEngine
          foreach (Entity e in m_entities)
          {
             e.Velocity = new SizeF(e.Velocity.Width * AirResistance, (e.Velocity.Height + Gravity) * AirResistance);
+            e.AngularVelocity *= AirResistance;
          }
       }
 
@@ -74,11 +75,11 @@ namespace EternalEngine
             {
                intersection = Intersection(v.Location + translationE, e.Ghost(v) + translationE,
                    c.Ghost(l.Index1) + translationC, c.Ghost(l.Index2) + translationC);
-               if (!intersection.IsEmpty)
+               if (!intersection.IsEmpty) //then v collides with l
                {
                   //tan is the tangent of the surface being bounced off of (on Entity e)
                   //inc is the incident vector of the incoming object (Ent c)
-                  //We pretend Ent e is stationary
+                  //We pretend Ent c is stationary
 
                   SizeF ev = new SizeF(e.Ghost(v).X - v.Location.X, e.Ghost(v).Y - v.Location.Y);
                   SizeF cv = new SizeF(c.Ghost(l.Index1).X - c.Vertices[l.Index1].Location.X, c.Ghost(l.Index1).Y - c.Vertices[l.Index1].Location.Y);
@@ -91,13 +92,11 @@ namespace EternalEngine
                   float tanmag = (float)(Math.Sqrt(Math.Pow(inc.Width, 2) + Math.Pow(inc.Height, 2)) *
                      Math.Cos(thetatan + Math.Atan2(inc.Height, inc.Width)));
 
-                  SizeF tan = new SizeF((float)(tanmag * Math.Cos(//((/*3 * */Math.PI) /*/ 2*/) - thetatan)),
-                     -thetatan )),
-                                        (float)(tanmag * Math.Sin(//((/*3 * */Math.PI) /*/ 2*/) - thetatan)));
-                                        -thetatan )));
+                  SizeF tan = new SizeF((float)(tanmag * Math.Cos(-thetatan)),
+                                        (float)(tanmag * Math.Sin(-thetatan)));
 
-                  SizeF push = new SizeF(this.ElasticityCoefficient * 2 * (inc.Width - tan.Width) * e.Mass, //impulse to pass to Push()
-                                         this.ElasticityCoefficient * 2 * (tan.Height - inc.Height) * e.Mass);
+                  SizeF push = new SizeF(this.ElasticityCoefficient * (inc.Width - tan.Width) * e.Mass, //impulse to pass to Push()
+                                         this.ElasticityCoefficient * (-inc.Height + tan.Height) * e.Mass);
 
                   e.Push(intersection, push);
                   //DebugBuffer.AddLine(intersection, intersection + new SizeF(push.Width * 10, push.Height * 10));

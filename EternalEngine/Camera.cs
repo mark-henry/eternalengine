@@ -7,12 +7,15 @@ namespace EternalEngine
    {
       private PointF m_shakedisplace = new Point(0, 0);
 
-      public Camera() : this(new PointF(0, 0)) { }
-      public Camera(float x, float y) : this(new PointF(x, y)) { }
-      public Camera(PointF Location)
+      public Camera(Size screensize) : this(new PointF(0, 0), screensize) { }
+      public Camera(float x, float y, Size screensize) : this(new PointF(x, y), screensize) { }
+      public Camera(PointF Location, Size screensize)
       {
          this.Location = Location;
+         this.ScreenSize = screensize;
       }
+
+      public Size ScreenSize { get; set; }
 
       private PointF m_location;
       public PointF Location
@@ -29,5 +32,21 @@ namespace EternalEngine
          Random r = new Random();
          m_shakedisplace = new PointF((float)(r.NextDouble() - .5) * (intensity / 5), (float)(r.NextDouble() - .5) * (intensity / 5));
       }
+
+      public PointF ScreenToWorld(PointF p)
+      {
+         PointF retp = new PointF(p.X, p.Y);
+         retp.X = p.X + this.Location.X - (this.ScreenSize.Width / 2);
+         retp.Y = p.Y + this.Location.Y - (this.ScreenSize.Height / 2);
+         return retp;
+      }
+      public PointF WorldtoScreen(PointF p)
+      {
+         PointF retp = new PointF(p.X, p.Y);
+         retp.X = p.X - this.Location.X + (this.ScreenSize.Width / 2);
+         retp.Y = p.Y - this.Location.Y + (this.ScreenSize.Height / 2);
+         return retp;
+      }
+
    }
 }

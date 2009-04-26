@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Animation.cs" />
     <Compile Include="Camera.cs" />
+    <Compile Include="Engine.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="GUI.cs">
     </Compile>

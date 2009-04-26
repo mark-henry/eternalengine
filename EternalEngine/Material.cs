@@ -5,7 +5,7 @@ namespace EternalEngine
    [Serializable]
    public class Material
    {
-      private static Material matSteel = new Material(.0005f, .4f);
+      private static Material matSteel = new Material(.5f, .4f);
       public static Material Steel { get { return matSteel; } }
 
       /// <summary>
