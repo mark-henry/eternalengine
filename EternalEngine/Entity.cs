@@ -89,33 +89,42 @@ namespace EternalEngine
       /// <param name="push">Impulse in specks times pixels per frame</param>
       public void Push(PointF point, SizeF push)
       {
-         PointF cm = CenterofMass;
+         PointF cm = CenterofMass + new SizeF(this.Location); //cm is in world coords! yay!
          //Debug.Write("push: " + this.Velocity + " pushed " + push);
 
-         float theta = (float)(Math.Atan2(-push.Height, push.Width) - Math.Atan2(point.Y - cm.Y, point.X - cm.X));
+         double pushtan = Math.Atan2(push.Height, push.Width);
+         double levertan = Math.Atan2(point.Y - cm.Y, point.X - cm.X);
+         double reverselever = Math.Atan2(cm.Y - point.Y, cm.X - point.X);
+
+         float theta = (float)(pushtan - reverselever);
             //Angle between push and lever arm
 
-         Debug.WriteLine("theta: " + theta.ToString());
-         //Debug.WriteLine(this.ToString() + " push: " + Math.Atan2(push.Height, push.Width));
-         //Debug.WriteLine(this.ToString() + " lever: " + Math.Atan2(point.Y - cm.Y, point.X - cm.X));
+         //Debug.WriteLine("theta: " + theta.ToString());
+         //Debug.WriteLine(this.ToString() + " push: " + pushtan);
+         //Debug.WriteLine(this.ToString() + " reverselever: " + reverselever);
+         //Debug.WriteLine(this.ToString() + " lever: " + levertan);
 
          //Velocity
-         this.Velocity = new SizeF(this.Velocity.Width - (push.Width / this.Mass) * (float)Math.Cos(theta),
-            this.Velocity.Height + (push.Height / this.Mass) * (float)Math.Sin(theta));
+         this.Velocity = new SizeF(this.Velocity.Width + (push.Width / this.Mass) * (float)Math.Cos(theta),
+            this.Velocity.Height + (push.Height / this.Mass) * (float)Math.Cos(theta));
 
          //Angular Velocity
          //Thanks to http://hyperphysics.phy-astr.gsu.edu/Hbase/torq2.html
-         float leverarm = (float)(Math.Sqrt(Math.Pow(point.X - cm.X, 2) + Math.Pow(point.Y - cm.Y, 2)) * Math.Sin(theta)); // r * sin(Θ)
-         if (theta > 0 && theta < Math.PI) //counterclockwise fix
+         float leverarm = (float)Math.Abs((Math.Sqrt(Math.Pow(point.X - cm.X, 2) + Math.Pow(point.Y - cm.Y, 2)) * Math.Sin(theta))); // r * sin(Θ)
+         float angularchangular = ((float)Math.Sqrt(Math.Pow(push.Width, 2) + Math.Pow(push.Height, 2)) * leverarm) / (MomentofInertia);
+         if (levertan <= 0) //if push is on top
          {
-            AngularVelocity += ((float)Math.Sqrt(Math.Pow(push.Width, 2) + Math.Pow(push.Height, 2)) * leverarm) / (MomentofInertia * 20); // F * lever arm length
+            if (pushtan > levertan && pushtan < reverselever)
+            { AngularVelocity += angularchangular; }
+            else { AngularVelocity -= angularchangular; }
          }
          else
          {
-            AngularVelocity -= ((float)Math.Sqrt(Math.Pow(push.Width, 2) + Math.Pow(push.Height, 2)) * leverarm) / (MomentofInertia * 20); // F * lever arm length
+            if (pushtan > levertan || pushtan < reverselever) //take care of the singularity
+            { AngularVelocity += angularchangular; }
+            else { AngularVelocity -= angularchangular; }
          }
-
-         //Debug.WriteLine(" for " + this.Velocity);
+         //Debug.WriteLine(" to " + this.Velocity);
       }
 
       /// <summary>
@@ -169,6 +178,9 @@ namespace EternalEngine
 
       public Material Material { get; set; }
 
+      /// <summary>
+      /// In object coordinates
+      /// </summary>
       public PointF CenterofMass
       {
          get
