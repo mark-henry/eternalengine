@@ -14,12 +14,13 @@ namespace AEternal
       Camera cam = new Camera(new PointF(0, 0));
       enum AnimatorModes { Animator, Modeler }
       AnimatorModes Mode;
-      AEternalEntity currentfile = new AEternalEntity();
+      ActorEntity currentfile = new ActorEntity();
       enum ModelerTools { MoveVertex, NewVertex, LinkVerticesWithLine, DeleteVertex }
       ModelerTools CurrentTool;
       int linkstep = 1;
       int firstlink;
       int secondlink;
+      int selectedvertex = -1;
 
       public Form1()
       {
@@ -232,11 +233,11 @@ namespace AEternal
          {
             g.DrawEllipse(new Pen(Color.Black, 2), WorldtoScreen(v.Location).X - .5f, WorldtoScreen(v.Location).Y - .5f, 1, 1);
          }
-         if (currentfile.SelectedVertex != -1) //Selected gets a red circle
+         if (selectedvertex != -1) //Selected gets a red circle
          {
-            PointF sv = WorldtoScreen(currentfile.Vertices[currentfile.SelectedVertex].Location);
+            PointF sv = WorldtoScreen(currentfile.Vertices[selectedvertex].Location);
             g.DrawEllipse(new Pen(Color.Red), new RectangleF(sv.X - 1.5f, sv.Y - 1.5f, 3, 3));
-            g.DrawString(currentfile.Vertices[currentfile.SelectedVertex].Location.ToString(),
+            g.DrawString(currentfile.Vertices[selectedvertex].Location.ToString(),
                 new Font("Agency FB", 9), Brushes.Black, sv.X + 12, sv.Y + 10);
          }
          string keylist = "Keyframes:\n";        //Keyframes list
@@ -271,11 +272,11 @@ namespace AEternal
                         if (linkstep == 1)
                         {
                            linkstep = 2;
-                           firstlink = currentfile.SelectedVertex;
+                           firstlink = selectedvertex;
                         }
                         else
                         {
-                           secondlink = currentfile.SelectedVertex;
+                           secondlink = selectedvertex;
                            if (firstlink != secondlink)
                            {
                               currentfile.Lines.Add(new Line(firstlink, secondlink, Color.Green, 2));
@@ -296,17 +297,17 @@ namespace AEternal
                   case ModelerTools.DeleteVertex:
                      if (IsDragging)
                      {
-                        currentfile.Vertices.RemoveAt(currentfile.SelectedVertex);
+                        currentfile.Vertices.RemoveAt(selectedvertex);
                         Line[] lines = new Line[currentfile.Lines.Count];
                         currentfile.Lines.CopyTo(lines);
                         foreach (Line l in lines)
                         {
-                           if (l.Index1 == currentfile.SelectedVertex)
+                           if (l.Index1 == selectedvertex)
                               currentfile.Lines.Remove(l);
-                           if (l.Index2 == currentfile.SelectedVertex)
+                           if (l.Index2 == selectedvertex)
                               currentfile.Lines.Remove(l);
                         }
-                        currentfile.SelectedVertex = -1;
+                        selectedvertex = -1;
                      }
                      break;
                }
@@ -318,9 +319,9 @@ namespace AEternal
       private void Form1_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
       {
          SelectVertex(e);
-         if (currentfile.SelectedVertex != -1 && IsDragging)
+         if (selectedvertex != -1 && IsDragging)
          {
-            currentfile.Vertices[currentfile.SelectedVertex].Location = ScreenToWorld((PointF)e.Location);
+            currentfile.Vertices[selectedvertex].Location = ScreenToWorld((PointF)e.Location);
             Invalidate();
          }
       }
@@ -328,7 +329,7 @@ namespace AEternal
       private void Form1_MouseUp(object sender, MouseEventArgs e)
       {
          IsDragging = false;
-         currentfile.SelectedVertex = -1;
+         selectedvertex = -1;
          Invalidate();
       }
 
@@ -340,13 +341,13 @@ namespace AEternal
          {
             if (hit.Contains((int)v.LocationX, (int)v.LocationY))
             {
-               currentfile.SelectedVertex = ii;
+               selectedvertex = ii;
                IsDragging = true;
                return true;
             }
             ii++;
          }
-         currentfile.SelectedVertex = -1;
+         selectedvertex = -1;
          return false;
       }
 
@@ -360,12 +361,12 @@ namespace AEternal
          {
             if (hit.Contains((int)v.LocationX, (int)v.LocationY))
             {
-               currentfile.SelectedVertex = ii;
+               selectedvertex = ii;
                return true;
             }
             ii++;
          }
-         currentfile.SelectedVertex = -1;
+         selectedvertex = -1;
          IsDragging = false;
          return false;
       }
