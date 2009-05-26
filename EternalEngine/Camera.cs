@@ -48,5 +48,6 @@ namespace EternalEngine
          return retp;
       }
 
+      public bool DrawGhosts { get; set; }
    }
 }

@@ -128,20 +128,26 @@ namespace EternalEngineDemo
       {
          eng.Draw(e.Graphics);
 
-         RectangleF r = new RectangleF(eng.Camera.WorldtoScreen(eng.Map.Entities[0].PhysBox.Location), eng.Map.Entities[0].PhysBox.Size);
-         RectangleF r2 = new RectangleF(eng.Camera.WorldtoScreen(eng.Map.Entities[1].PhysBox.Location), eng.Map.Entities[1].PhysBox.Size);
-         //foreach (Vertex v in eng.Map.Entities[0].Vertices) //Ghosts
-         //{
-         //   e.Graphics.DrawEllipse(new Pen(Brushes.Violet, 2), eng.Camera.WorldtoScreen(eng.Map.Entities[0].Ghost(v)).X - .5f + eng.Map.Entities[0].Location.X,
-         //       eng.Camera.WorldtoScreen(eng.Map.Entities[0].Ghost(v)).Y - .5f + eng.Map.Entities[0].Location.Y, 1, 1);
-         //}
-         //foreach (Vertex v in eng.Map.Entities[1].Vertices) //Ghosts
-         //{
-         //   e.Graphics.DrawEllipse(new Pen(Brushes.Violet, 2), eng.Camera.WorldtoScreen(eng.Map.Entities[1].Ghost(v)).X - .5f + eng.Map.Entities[1].Location.X,
-         //       eng.Camera.WorldtoScreen(eng.Map.Entities[1].Ghost(v)).Y - .5f + eng.Map.Entities[1].Location.Y, 1, 1);
-         //}
-
          e.Graphics.DrawString(ticker.ToString(), new Font(FontFamily.GenericMonospace, 10), Brushes.Gray, this.Width - 50, this.Height - 50);
+
+         if (eng.Camera.DrawGhosts)
+         {
+             RectangleF r = new RectangleF(eng.Camera.WorldtoScreen(eng.Map.Entities[0].PhysBox.Location), eng.Map.Entities[0].PhysBox.Size);
+             RectangleF r2 = new RectangleF(eng.Camera.WorldtoScreen(eng.Map.Entities[1].PhysBox.Location), eng.Map.Entities[1].PhysBox.Size);
+             e.Graphics.DrawRectangle(new Pen(Brushes.Orange), r.X, r.Y, r.Width, r.Height);
+             e.Graphics.DrawRectangle(new Pen(Brushes.Orange), r2.X, r2.Y, r2.Width, r2.Height);
+             foreach (Vertex v in eng.Map.Entities[0].Vertices)
+             {
+                 e.Graphics.DrawEllipse(new Pen(Brushes.Violet, 2), eng.Camera.WorldtoScreen(eng.Map.Entities[0].Ghost(v)).X - .5f + eng.Map.Entities[0].Location.X,
+                     eng.Camera.WorldtoScreen(eng.Map.Entities[0].Ghost(v)).Y - .5f + eng.Map.Entities[0].Location.Y, 1, 1);
+             }
+             foreach (Vertex v in eng.Map.Entities[1].Vertices)
+             {
+                 e.Graphics.DrawEllipse(new Pen(Brushes.Violet, 2), eng.Camera.WorldtoScreen(eng.Map.Entities[1].Ghost(v)).X - .5f + eng.Map.Entities[1].Location.X,
+                     eng.Camera.WorldtoScreen(eng.Map.Entities[1].Ghost(v)).Y - .5f + eng.Map.Entities[1].Location.Y, 1, 1);
+
+             }
+         }
       }
 
       private void timer1_Tick(object sender, System.EventArgs e)
@@ -150,6 +156,7 @@ namespace EternalEngineDemo
          Debug.WriteLine("Frame: " + ticker);
          eng.OnTick();
 
+         //eng.Camera.ShakeCamera(50);
          //Invalidate(new Rectangle(0, 0, 40, 15));
          //eng.Physics.Entities[0].Push(eng.Physics.Entities[0].CenterofMass + new SizeF(5,-5), new SizeF(.01f, .01f));
          //eng.Map.Entities[0].Push(new PointF(0, 0), new SizeF(1, 0));
@@ -194,6 +201,10 @@ namespace EternalEngineDemo
             case Keys.Escape:
                timer1.Enabled = !eng.GUI.PauseToggle();
                Invalidate(eng.GUI.GetInvalidatedRegion());
+               break;
+             case Keys.G:
+               eng.Camera.DrawGhosts = !eng.Camera.DrawGhosts;
+               Invalidate();
                break;
          }
       }
