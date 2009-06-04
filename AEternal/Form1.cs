@@ -11,7 +11,7 @@ namespace AEternal
 {
    public partial class Form1 : Form
    {
-      Camera cam = new Camera(new PointF(0, 0));
+      Camera cam;
       enum AnimatorModes { Animator, Modeler }
       AnimatorModes Mode;
       ActorEntity currentfile = new ActorEntity();
@@ -25,6 +25,7 @@ namespace AEternal
       public Form1()
       {
          InitializeComponent();
+         cam = new Camera(new PointF(0, 0), this.ClientSize);
       }
 
       private void Form1_Load(object sender, EventArgs e)
@@ -100,10 +101,10 @@ namespace AEternal
       }
 
       private void button5_Click(object sender, EventArgs e) //Open 
-      {
+      {            
+         OpenFileDialog opendlg = new OpenFileDialog();
          try
          {
-            OpenFileDialog opendlg = new OpenFileDialog();
             opendlg.DefaultExt = "eem";
             opendlg.Filter = "Eternal Engine Model (*.eem)|*.eem";
             opendlg.Multiselect = false;
@@ -111,13 +112,16 @@ namespace AEternal
             {
                Stream file = opendlg.OpenFile();
                BinaryFormatter bf = new BinaryFormatter();
-               currentfile = (AEternalEntity)bf.Deserialize(file);
+               currentfile = (ActorEntity)bf.Deserialize(file);
                file.Close();
                numericUpDown3.Value = currentfile.Animation.NumberofFrames;
                trackBar1.Value = 0;
             }
          }
-         catch (Exception ex) { MessageBox.Show(ex.Message, "Fail!!"); }
+         catch (Exception ex)
+         {
+            MessageBox.Show(ex.Message, "Fail!!");
+         }
          Invalidate(new Rectangle(0, 0, 75, this.Height));
       }
 
@@ -387,4 +391,23 @@ namespace AEternal
          return retp;
       }
    }
+
+   /// <summary>
+   /// Deprecated
+   /// </summary>
+   [Serializable]
+   public class AEternalEntity : ActorEntity
+   {
+      public AEternalEntity()
+      {
+      }
+
+      private int m_selectedvertex = -1;
+      public int SelectedVertex
+      {
+         get { return m_selectedvertex; }
+         set { if (value > this.Vertices.Count) { throw new ArgumentOutOfRangeException(); } m_selectedvertex = value; }
+      }
+   }
+
 }
