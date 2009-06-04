@@ -5,8 +5,10 @@ namespace EternalEngine
    [Serializable]
    public class Material
    {
-      private static Material matSteel = new Material(.5f, .4f);
-      public static Material Steel { get { return matSteel; } }
+      /// <summary>
+      /// Density .5f, Elasticity .4f
+      /// </summary>
+      public static Material Steel { get { return new Material(.5f, .4f); } }
 
       /// <summary>
       /// Defines an Eternal Engine Material.

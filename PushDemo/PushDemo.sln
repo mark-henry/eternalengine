@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C# Express 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PushDemo", "PushDemo\PushDemo.csproj", "{CB4D0223-D83A-4BA5-9473-34DF62EF17C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EternalEngine", "..\eternalengine\EternalEngine\EternalEngine.csproj", "{5BD088C5-A03E-4227-A87B-B0EA9B088F60}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EternalEngine", "..\EternalEngine\EternalEngine.csproj", "{5BD088C5-A03E-4227-A87B-B0EA9B088F60}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

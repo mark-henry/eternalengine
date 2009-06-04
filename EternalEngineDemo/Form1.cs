@@ -10,6 +10,7 @@ namespace EternalEngineDemo
    {
       private int ticker = 0;
       private Engine eng;
+      private bool drawghosts;
 
       public Form1()
       {
@@ -130,7 +131,7 @@ namespace EternalEngineDemo
 
          e.Graphics.DrawString(ticker.ToString(), new Font(FontFamily.GenericMonospace, 10), Brushes.Gray, this.Width - 50, this.Height - 50);
 
-         if (eng.Camera.DrawGhosts)
+         if (drawghosts)
          {
              RectangleF r = new RectangleF(eng.Camera.WorldtoScreen(eng.Map.Entities[0].PhysBox.Location), eng.Map.Entities[0].PhysBox.Size);
              RectangleF r2 = new RectangleF(eng.Camera.WorldtoScreen(eng.Map.Entities[1].PhysBox.Location), eng.Map.Entities[1].PhysBox.Size);
@@ -203,7 +204,7 @@ namespace EternalEngineDemo
                Invalidate(eng.GUI.GetInvalidatedRegion());
                break;
              case Keys.G:
-               eng.Camera.DrawGhosts = !eng.Camera.DrawGhosts;
+               drawghosts = !drawghosts;
                Invalidate();
                break;
          }
