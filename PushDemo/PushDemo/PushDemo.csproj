@@ -80,7 +80,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\eternalengine\EternalEngine\EternalEngine.csproj">
+    <ProjectReference Include="..\..\EternalEngine\EternalEngine.csproj">
       <Project>{5BD088C5-A03E-4227-A87B-B0EA9B088F60}</Project>
       <Name>EternalEngine</Name>
     </ProjectReference>

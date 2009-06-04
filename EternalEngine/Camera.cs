@@ -47,7 +47,5 @@ namespace EternalEngine
          retp.Y = p.Y - this.Location.Y + (this.ScreenSize.Height / 2);
          return retp;
       }
-
-      public bool DrawGhosts { get; set; }
    }
 }

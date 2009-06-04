@@ -54,18 +54,18 @@ namespace EternalEngine
                {
                   Debug.Print("Physics: PhysBox collision between entity {0} and entity {1}", e, c);
                   //Check Vertex v against each Line l in Entity c
-                  SizeF translationE = new SizeF(ents[e].Location);
-                  SizeF translationC = new SizeF(ents[c].Location);
-                  float elasticity = ents[e].Material.Elasticity * ents[c].Material.Elasticity * ElasticityCoefficient;
+                  //float elasticity = ents[e].Material.Elasticity * ents[c].Material.Elasticity * ElasticityCoefficient;
                   //Debug.WriteLine("Physics: Elasticity: " + elasticity);
-                  Collide(ents[e], ents[c], translationE, translationC);
-                  Collide(ents[c], ents[e], translationC, translationE);
+                  Collide(ents[e], ents[c]);
+                  Collide(ents[c], ents[e]);
                }
             }
          }
       }
 
-      private void Collide(Entity e, Entity c, SizeF translationE, SizeF translationC)
+      /// <param name="translationE">Entity e's location</param>
+      /// <param name="translationC">Entity c's location</param>
+      public void Collide(Entity e, Entity c)
       {
          PointF intersection;
          //float elasticity = e.Material.Elasticity * c.Material.Elasticity * ElasticityCoefficient;
@@ -73,11 +73,11 @@ namespace EternalEngine
          {
             foreach (Line l in c.Lines)
             {
-               intersection = Intersection(v.Location + translationE, e.Ghost(v) + translationE,
-                   c.Ghost(l.Index1) + translationC, c.Ghost(l.Index2) + translationC);
+               intersection = Intersection(v.Location + new SizeF(e.Location), e.Ghost(v) + new SizeF(e.Location),
+                   c.Ghost(l.Index1) + new SizeF(c.Location), c.Ghost(l.Index2) + new SizeF(c.Location));
                if (!intersection.IsEmpty) //then v collides with l
                {
-                  //tan is the tangent of the surface being bounced off of (on Entity e)
+                  //tan is the surface being bounced off of (on Entity e)
                   //inc is the incident vector of the incoming object (Ent c)
                   //We pretend Ent c is stationary
 
@@ -113,7 +113,7 @@ namespace EternalEngine
       /// Do two lines intersect
       /// </summary>
       /// <returns>Returns empty point if no intersection</returns>
-      private PointF Intersection(PointF a1, PointF a2, PointF b1, PointF b2)
+      public PointF Intersection(PointF a1, PointF a2, PointF b1, PointF b2)
       {
          // Code based on http://local.wasp.uwa.edu.au/~pbourke/geometry/lineline2d/
          float denom = (b2.Y - b1.Y) * (a2.X - a1.X) - (b2.X - b1.X) * (a2.Y - a1.Y);

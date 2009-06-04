@@ -8,3 +8,13 @@ C:\Documents and Settings\Mark\My Documents\C# Programs\PushDemo\PushDemo\obj\Re
 C:\Documents and Settings\Mark\My Documents\C# Programs\PushDemo\PushDemo\bin\Release\EternalEngine.dll
 C:\Documents and Settings\Mark\My Documents\C# Programs\PushDemo\PushDemo\bin\Release\EternalEngine.pdb
 C:\Documents and Settings\Mark\My Documents\C# Programs\PushDemo\PushDemo\obj\Release\PushDemo.Form1.resources
+C:\Documents and Settings\Mark\My Documents\C# Programs\eternalengine\PushDemo\PushDemo\obj\Release\ResolveAssemblyReference.cache
+C:\Documents and Settings\Mark\My Documents\C# Programs\eternalengine\PushDemo\PushDemo\obj\Release\PushDemo.Form1.resources
+C:\Documents and Settings\Mark\My Documents\C# Programs\eternalengine\PushDemo\PushDemo\obj\Release\PushDemo.Properties.Resources.resources
+C:\Documents and Settings\Mark\My Documents\C# Programs\eternalengine\PushDemo\PushDemo\obj\Release\PushDemo.csproj.GenerateResource.Cache
+C:\Documents and Settings\Mark\My Documents\C# Programs\eternalengine\PushDemo\PushDemo\obj\Release\PushDemo.exe
+C:\Documents and Settings\Mark\My Documents\C# Programs\eternalengine\PushDemo\PushDemo\obj\Release\PushDemo.pdb
+C:\Documents and Settings\Mark\My Documents\C# Programs\eternalengine\PushDemo\PushDemo\bin\Release\PushDemo.exe
+C:\Documents and Settings\Mark\My Documents\C# Programs\eternalengine\PushDemo\PushDemo\bin\Release\PushDemo.pdb
+C:\Documents and Settings\Mark\My Documents\C# Programs\eternalengine\PushDemo\PushDemo\bin\Release\EternalEngine.dll
+C:\Documents and Settings\Mark\My Documents\C# Programs\eternalengine\PushDemo\PushDemo\bin\Release\EternalEngine.pdb

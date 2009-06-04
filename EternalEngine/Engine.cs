@@ -54,7 +54,6 @@ namespace EternalEngine
          }
          this.GUI.Draw(g);
          //g.FillRegion(Brushes.Purple, this.GUI.GetInvalidatedRegion());
-
       }
 
       /// <summary>
