@@ -29,7 +29,6 @@ namespace EternalEngine
          }
       }
 
-
       /// <returns>Returns mass in specks</returns>
       public float VertexMass(int index)
       {
@@ -40,7 +39,6 @@ namespace EternalEngine
          }
          return ret * Material.Density * .5f;
       }
-
 
       /// <returns>Returns length in pixels</returns>
       public float LineLength(int index)
@@ -105,8 +103,8 @@ namespace EternalEngine
          //Debug.WriteLine(this.ToString() + " lever: " + levertan);
 
          //Velocity
-         this.Velocity = new SizeF(this.Velocity.Width + (push.Width / this.Mass) * (float)Math.Cos(theta),
-            this.Velocity.Height + (push.Height / this.Mass) * (float)Math.Cos(theta));
+         this.Velocity = new SizeF(this.Velocity.Width + (push.Width * (float)Math.Cos(theta) / this.Mass),
+            this.Velocity.Height + (push.Height  * (float)Math.Cos(theta) / this.Mass));
 
          //Angular Velocity
          //Thanks to http://hyperphysics.phy-astr.gsu.edu/Hbase/torq2.html
@@ -220,6 +218,8 @@ namespace EternalEngine
 
       public override float AngularVelocity { get { return 0f; } set { } }
 
+      public bool IsFallFrozen { get; set; }
+
       private Animation m_animation;
       public Animation Animation
       {
@@ -269,5 +269,7 @@ namespace EternalEngine
       public PropEntity()
       {
       }
+
+      public bool IsFallFrozen { get; set; }
    }
 }

@@ -63,7 +63,10 @@ namespace EternalEngine
       {
          foreach (ActorEntity ae in this.Physics.Entities.FindAll(ee => ee is ActorEntity))
          {
-            ae.Animation.GoTo(ae.Vertices, ae.Animation.CurrentFrame + 1);
+            if (ae.Animation != null)
+            {
+               ae.Animation.GoTo(ae.Vertices, ae.Animation.CurrentFrame + 1);
+            }
          }
          this.Physics.ApplyGravityandAirResistance();
          this.Physics.CollisionDetection();

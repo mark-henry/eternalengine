@@ -1,0 +1,8 @@
+C:\Documents and Settings\Mark\My Documents\C# Programs\WTF\WTF\obj\Release\ResolveAssemblyReference.cache
+C:\Documents and Settings\Mark\My Documents\C# Programs\WTF\WTF\obj\Release\WTF.Form1.resources
+C:\Documents and Settings\Mark\My Documents\C# Programs\WTF\WTF\obj\Release\WTF.Properties.Resources.resources
+C:\Documents and Settings\Mark\My Documents\C# Programs\WTF\WTF\obj\Release\WTF.csproj.GenerateResource.Cache
+C:\Documents and Settings\Mark\My Documents\C# Programs\WTF\WTF\bin\Release\WTF.exe
+C:\Documents and Settings\Mark\My Documents\C# Programs\WTF\WTF\bin\Release\WTF.pdb
+C:\Documents and Settings\Mark\My Documents\C# Programs\WTF\WTF\obj\Release\WTF.exe
+C:\Documents and Settings\Mark\My Documents\C# Programs\WTF\WTF\obj\Release\WTF.pdb
