@@ -18,3 +18,13 @@ C:\Documents and Settings\Mark\My Documents\C# Programs\eternalengine\PushDemo\P
 C:\Documents and Settings\Mark\My Documents\C# Programs\eternalengine\PushDemo\PushDemo\bin\Debug\PushDemo.pdb
 C:\Documents and Settings\Mark\My Documents\C# Programs\eternalengine\PushDemo\PushDemo\bin\Debug\EternalEngine.dll
 C:\Documents and Settings\Mark\My Documents\C# Programs\eternalengine\PushDemo\PushDemo\bin\Debug\EternalEngine.pdb
+C:\Documents and Settings\Mark\Desktop\eternalengine\PushDemo\PushDemo\bin\Debug\PushDemo.exe
+C:\Documents and Settings\Mark\Desktop\eternalengine\PushDemo\PushDemo\bin\Debug\PushDemo.pdb
+C:\Documents and Settings\Mark\Desktop\eternalengine\PushDemo\PushDemo\bin\Debug\EternalEngine.dll
+C:\Documents and Settings\Mark\Desktop\eternalengine\PushDemo\PushDemo\bin\Debug\EternalEngine.pdb
+C:\Documents and Settings\Mark\Desktop\eternalengine\PushDemo\PushDemo\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Mark\Desktop\eternalengine\PushDemo\PushDemo\obj\Debug\PushDemo.Form1.resources
+C:\Documents and Settings\Mark\Desktop\eternalengine\PushDemo\PushDemo\obj\Debug\PushDemo.Properties.Resources.resources
+C:\Documents and Settings\Mark\Desktop\eternalengine\PushDemo\PushDemo\obj\Debug\PushDemo.csproj.GenerateResource.Cache
+C:\Documents and Settings\Mark\Desktop\eternalengine\PushDemo\PushDemo\obj\Debug\PushDemo.exe
+C:\Documents and Settings\Mark\Desktop\eternalengine\PushDemo\PushDemo\obj\Debug\PushDemo.pdb

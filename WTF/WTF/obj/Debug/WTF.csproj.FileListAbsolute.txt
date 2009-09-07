@@ -1,0 +1,24 @@
+C:\Documents and Settings\Mark\Local Settings\Application Data\Temporary Projects\WTF\bin\Debug\WTF.exe
+C:\Documents and Settings\Mark\Local Settings\Application Data\Temporary Projects\WTF\bin\Debug\WTF.pdb
+C:\Documents and Settings\Mark\Local Settings\Application Data\Temporary Projects\WTF\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Mark\Local Settings\Application Data\Temporary Projects\WTF\obj\Debug\WTF.Form1.resources
+C:\Documents and Settings\Mark\Local Settings\Application Data\Temporary Projects\WTF\obj\Debug\WTF.Properties.Resources.resources
+C:\Documents and Settings\Mark\Local Settings\Application Data\Temporary Projects\WTF\obj\Debug\WTF.csproj.GenerateResource.Cache
+C:\Documents and Settings\Mark\Local Settings\Application Data\Temporary Projects\WTF\obj\Debug\WTF.exe
+C:\Documents and Settings\Mark\Local Settings\Application Data\Temporary Projects\WTF\obj\Debug\WTF.pdb
+C:\Documents and Settings\Mark\My Documents\C# Programs\WTF\WTF\obj\Debug\WTF.exe
+C:\Documents and Settings\Mark\My Documents\C# Programs\WTF\WTF\obj\Debug\WTF.pdb
+C:\Documents and Settings\Mark\My Documents\C# Programs\WTF\WTF\bin\Debug\WTF.exe
+C:\Documents and Settings\Mark\My Documents\C# Programs\WTF\WTF\bin\Debug\WTF.pdb
+C:\Documents and Settings\Mark\My Documents\C# Programs\WTF\WTF\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Mark\My Documents\C# Programs\WTF\WTF\obj\Debug\WTF.Form1.resources
+C:\Documents and Settings\Mark\My Documents\C# Programs\WTF\WTF\obj\Debug\WTF.Properties.Resources.resources
+C:\Documents and Settings\Mark\My Documents\C# Programs\WTF\WTF\obj\Debug\WTF.csproj.GenerateResource.Cache
+C:\Documents and Settings\Mark\Desktop\eternalengine\WTF\WTF\obj\Debug\WTF.exe
+C:\Documents and Settings\Mark\Desktop\eternalengine\WTF\WTF\obj\Debug\WTF.pdb
+C:\Documents and Settings\Mark\Desktop\eternalengine\WTF\WTF\bin\Debug\WTF.exe
+C:\Documents and Settings\Mark\Desktop\eternalengine\WTF\WTF\bin\Debug\WTF.pdb
+C:\Documents and Settings\Mark\Desktop\eternalengine\WTF\WTF\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Mark\Desktop\eternalengine\WTF\WTF\obj\Debug\WTF.Form1.resources
+C:\Documents and Settings\Mark\Desktop\eternalengine\WTF\WTF\obj\Debug\WTF.Properties.Resources.resources
+C:\Documents and Settings\Mark\Desktop\eternalengine\WTF\WTF\obj\Debug\WTF.csproj.GenerateResource.Cache

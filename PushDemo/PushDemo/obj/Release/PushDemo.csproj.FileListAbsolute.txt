@@ -18,3 +18,5 @@ C:\Documents and Settings\Mark\My Documents\C# Programs\eternalengine\PushDemo\P
 C:\Documents and Settings\Mark\My Documents\C# Programs\eternalengine\PushDemo\PushDemo\bin\Release\PushDemo.pdb
 C:\Documents and Settings\Mark\My Documents\C# Programs\eternalengine\PushDemo\PushDemo\bin\Release\EternalEngine.dll
 C:\Documents and Settings\Mark\My Documents\C# Programs\eternalengine\PushDemo\PushDemo\bin\Release\EternalEngine.pdb
+C:\Documents and Settings\Mark\Desktop\eternalengine\PushDemo\PushDemo\obj\Release\PushDemo.exe
+C:\Documents and Settings\Mark\Desktop\eternalengine\PushDemo\PushDemo\obj\Release\PushDemo.pdb
